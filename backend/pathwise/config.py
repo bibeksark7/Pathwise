@@ -7,12 +7,13 @@ must be supplied explicitly, and production start-up refuses placeholder values.
 
 from __future__ import annotations
 
+import json
 from enum import StrEnum
 from functools import lru_cache
-from typing import Literal
+from typing import Annotated, Literal
 
 from pydantic import Field, PostgresDsn, RedisDsn, field_validator, model_validator
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic_settings import BaseSettings, NoDecode, SettingsConfigDict
 
 
 class Environment(StrEnum):
@@ -45,7 +46,14 @@ class Settings(BaseSettings):
     debug: bool = False
     log_level: str = "INFO"
     api_port: int = 8000
-    cors_origins: list[str] = Field(default_factory=lambda: ["http://localhost:5173"])
+    # `NoDecode` is required, not stylistic: without it pydantic-settings tries to
+    # JSON-parse any complex-typed field inside the dotenv source, before field
+    # validators run. A plain `PATHWISE_CORS_ORIGINS=http://localhost:5173` in a
+    # .env would then crash the process at startup rather than reaching the
+    # comma-splitting validator below.
+    cors_origins: Annotated[list[str], NoDecode] = Field(
+        default_factory=lambda: ["http://localhost:5173"]
+    )
 
     # --- Persistence ---
     database_url: PostgresDsn = Field(
@@ -79,11 +87,27 @@ class Settings(BaseSettings):
 
     @field_validator("cors_origins", mode="before")
     @classmethod
-    def _split_origins(cls, value: object) -> object:
-        """Accept a comma-separated string as well as a JSON list."""
-        if isinstance(value, str) and not value.strip().startswith("["):
-            return [origin.strip() for origin in value.split(",") if origin.strip()]
-        return value
+    def _parse_origins(cls, value: object) -> object:
+        """Accept a comma-separated string or a JSON array.
+
+        `NoDecode` on the field turns off pydantic-settings' own JSON handling, so
+        both forms are parsed here. A .env realistically contains
+        `PATHWISE_CORS_ORIGINS=http://localhost:5173,https://app.example.com`, while
+        a container platform is just as likely to inject a JSON array.
+        """
+        if not isinstance(value, str):
+            return value
+
+        text = value.strip()
+        if text.startswith("["):
+            try:
+                return json.loads(text)
+            except json.JSONDecodeError as exc:
+                raise ValueError(
+                    f"PATHWISE_CORS_ORIGINS looks like JSON but is malformed: {exc}"
+                ) from exc
+
+        return [origin.strip() for origin in text.split(",") if origin.strip()]
 
     @model_validator(mode="after")
     def _require_real_secrets_in_production(self) -> Settings:
