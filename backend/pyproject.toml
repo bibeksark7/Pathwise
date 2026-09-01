@@ -1,0 +1,85 @@
+[project]
+name = "pathwise"
+version = "0.1.0"
+description = "Adaptive learning platform with a persistent knowledge graph and a deterministic decision engine"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.32",
+    "pydantic>=2.9",
+    "pydantic-settings>=2.6",
+    "sqlalchemy[asyncio]>=2.0.36",
+    "asyncpg>=0.30",
+    "alembic>=1.14",
+    "pgvector>=0.3.6",
+    "redis>=5.2",
+    "arq>=0.26",
+    "anthropic>=1.3",
+    "fastembed>=0.4",
+    "httpx2>=2.12",
+    "pyyaml>=6.0",
+    "argon2-cffi>=23.1",
+    "pyjwt>=2.10",
+    "python-multipart>=0.0.12",
+    "structlog>=24.4",
+    "tenacity>=9.0",
+    "typer>=0.15",
+]
+
+[project.optional-dependencies]
+openai = ["openai>=1.57"]
+dev = [
+    "pytest>=8.3",
+    "pytest-asyncio>=0.24",
+    "pytest-cov>=6.0",
+    "hypothesis>=6.119",
+    "ruff>=0.8",
+    "mypy>=1.13",
+    "types-pyyaml",
+    "anyio>=4.6",
+]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["pathwise*"]
+
+[tool.setuptools.package-data]
+pathwise = ["data/**/*.yaml", "ai/prompts/**/*.md"]
+
+# --------------------------------------------------------------------------- #
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+addopts = "--strict-markers -ra"
+markers = [
+    "live: contract tests that call the real Anthropic API (opt-in, costs money)",
+    "integration: requires a live Postgres/Redis",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "UP", "B", "A", "C4", "SIM", "RUF", "ASYNC", "PT"]
+ignore = ["B008"]  # FastAPI Depends() in defaults is idiomatic
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S101"]
+"pathwise/database/migrations/*" = ["E501", "N999"]
+
+[tool.mypy]
+python_version = "3.11"
+plugins = ["pydantic.mypy"]
+strict = true
+warn_return_any = true
+disallow_untyped_defs = true
+no_implicit_optional = true
+exclude = ["pathwise/database/migrations/versions/"]
+
+[[tool.mypy.overrides]]
+module = ["fastembed.*", "pgvector.*", "arq.*"]
+ignore_missing_imports = true

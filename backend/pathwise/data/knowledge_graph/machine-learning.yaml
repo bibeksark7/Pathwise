@@ -1,0 +1,787 @@
+# Machine learning, from the numerical stack through to deployed systems.
+#
+# This file carries most of the cross-domain prerequisite edges — into `mathematics`
+# and `programming` — which is precisely why the seed loader validates acyclicity
+# across all files together rather than one at a time.
+
+version: 1
+domain: machine-learning
+description: >-
+  The path from numerical Python to training, evaluating, and deploying models, with
+  the mathematical prerequisites made explicit rather than assumed.
+
+concepts:
+  # --- Numerical and data stack --------------------------------------------- #
+  - slug: numpy-fundamentals
+    name: NumPy Fundamentals
+    description: >-
+      Arrays, dtypes, vectorised operations, and broadcasting. Broadcasting in
+      particular is where most shape errors in model code originate.
+    difficulty: 2
+    estimated_minutes: 240
+    tags: [python, numerical, core]
+    requires:
+      - slug: python-data-structures
+        strength: 1.0
+      - slug: vectors-and-spaces
+        strength: 0.8
+        rationale: Array operations are vector operations; the maths gives them meaning.
+    objectives:
+      - id: lo-1
+        text: Create and reshape arrays and predict the resulting shapes.
+        bloom: apply
+      - id: lo-2
+        text: State the broadcasting rules and apply them to a shape mismatch.
+        bloom: analyze
+      - id: lo-3
+        text: Replace an explicit loop with a vectorised operation.
+        bloom: create
+
+  - slug: pandas-dataframes
+    name: Pandas DataFrames
+    description: >-
+      Tabular data in Python: indexing, selection, grouping, joining, and the
+      copy-versus-view distinction behind most chained-assignment bugs.
+    difficulty: 2
+    estimated_minutes: 270
+    tags: [python, data, core]
+    requires:
+      - slug: numpy-fundamentals
+        strength: 1.0
+    objectives:
+      - id: lo-1
+        text: Select, filter, and aggregate rows using label- and position-based indexing.
+        bloom: apply
+      - id: lo-2
+        text: Join two frames and reason about the resulting row count.
+        bloom: analyze
+      - id: lo-3
+        text: Explain when an operation returns a view rather than a copy.
+        bloom: understand
+
+  - slug: data-cleaning-and-preprocessing
+    name: Data Cleaning and Preprocessing
+    description: >-
+      Missing values, outliers, encoding, and scaling — and the ordering discipline
+      that prevents information from the test set leaking into training.
+    difficulty: 3
+    estimated_minutes: 270
+    tags: [data, core]
+    requires:
+      - slug: pandas-dataframes
+        strength: 1.0
+    objectives:
+      - id: lo-1
+        text: Handle missing data with a strategy justified by the mechanism.
+        bloom: evaluate
+      - id: lo-2
+        text: Encode categorical variables appropriately for a given model family.
+        bloom: apply
+      - id: lo-3
+        text: Explain how fitting a scaler before splitting leaks test information.
+        bloom: analyze
+
+  - slug: exploratory-data-analysis
+    name: Exploratory Data Analysis
+    description: >-
+      Interrogating a dataset before modelling it: distributions, correlations, and
+      the anomalies that decide whether the problem is even well posed.
+    difficulty: 2
+    estimated_minutes: 210
+    tags: [data]
+    requires:
+      - slug: pandas-dataframes
+        strength: 1.0
+      - slug: expectation-and-variance
+        strength: 0.8
+    objectives:
+      - id: lo-1
+        text: Summarise a dataset's distributions and identify anomalies.
+        bloom: analyze
+      - id: lo-2
+        text: Explain why correlation between features does not establish causation.
+        bloom: understand
+
+  - slug: data-visualization
+    name: Data Visualisation
+    description: >-
+      Choosing an encoding that makes structure visible, and avoiding the chart types
+      that obscure it.
+    difficulty: 2
+    estimated_minutes: 180
+    tags: [data]
+    requires:
+      - slug: pandas-dataframes
+        strength: 0.8
+    objectives:
+      - id: lo-1
+        text: Select a chart type appropriate to the data and the question.
+        bloom: evaluate
+      - id: lo-2
+        text: Produce a labelled, readable figure from a dataframe.
+        bloom: apply
+
+  - slug: feature-engineering
+    name: Feature Engineering
+    description: >-
+      Constructing inputs that expose structure a model can use, including
+      interactions, transformations, and domain-derived features.
+    difficulty: 3
+    estimated_minutes: 240
+    tags: [data]
+    requires:
+      - slug: data-cleaning-and-preprocessing
+        strength: 1.0
+    objectives:
+      - id: lo-1
+        text: Derive features that encode domain knowledge about a problem.
+        bloom: create
+      - id: lo-2
+        text: Identify a feature that leaks the target and explain the consequence.
+        bloom: analyze
+
+  - slug: data-pipelines
+    name: Data Pipelines
+    description: >-
+      Moving data reliably from source to model: extraction, transformation,
+      scheduling, and idempotency.
+    difficulty: 3
+    estimated_minutes: 240
+    tags: [engineering, data]
+    requires:
+      - slug: pandas-dataframes
+        strength: 0.8
+      - slug: sql-fundamentals
+        strength: 0.9
+    objectives:
+      - id: lo-1
+        text: Design a pipeline whose reruns are idempotent.
+        bloom: create
+      - id: lo-2
+        text: Explain why pipeline failures must be detectable rather than silent.
+        bloom: understand
+
+  # --- Supervised learning -------------------------------------------------- #
+  - slug: supervised-learning-fundamentals
+    name: Supervised Learning Fundamentals
+    description: >-
+      The supervised setting: features and labels, training and generalisation, and
+      the train/validation/test split that makes an estimate of performance honest.
+    difficulty: 3
+    estimated_minutes: 240
+    tags: [ml, core]
+    requires:
+      - slug: numpy-fundamentals
+        strength: 0.9
+      - slug: probability-fundamentals
+        strength: 0.8
+    objectives:
+      - id: lo-1
+        text: Frame a real problem as a supervised learning task.
+        bloom: apply
+      - id: lo-2
+        text: Explain the purpose of each of the train, validation, and test splits.
+        bloom: understand
+      - id: lo-3
+        text: Explain why performance on training data overstates generalisation.
+        bloom: analyze
+
+  - slug: linear-regression
+    name: Linear Regression
+    description: >-
+      Fitting a linear relationship by minimising squared error, solved both in closed
+      form and by gradient descent. The simplest complete instance of the whole
+      supervised learning loop.
+    difficulty: 3
+    estimated_minutes: 270
+    tags: [ml, core]
+    requires:
+      - slug: supervised-learning-fundamentals
+        strength: 1.0
+      - slug: matrix-operations
+        strength: 0.9
+      - slug: gradient-descent
+        strength: 0.9
+        rationale: >-
+          The closed form does not scale; every larger model is fit by gradient
+          descent, and linear regression is where that machinery is first seen whole.
+    objectives:
+      - id: lo-1
+        text: Derive the squared error objective and its gradient.
+        bloom: analyze
+      - id: lo-2
+        text: Fit a linear model and interpret its coefficients.
+        bloom: apply
+      - id: lo-3
+        text: Compare the normal equation with gradient descent on cost and scalability.
+        bloom: evaluate
+
+  - slug: logistic-regression
+    name: Logistic Regression
+    description: >-
+      Classification by squashing a linear score through a sigmoid and fitting with
+      cross-entropy loss.
+    difficulty: 3
+    estimated_minutes: 240
+    tags: [ml, core]
+    requires:
+      - slug: linear-regression
+        strength: 1.0
+    objectives:
+      - id: lo-1
+        text: Explain why squared error is inappropriate for classification.
+        bloom: analyze
+      - id: lo-2
+        text: Derive the cross-entropy loss and its gradient.
+        bloom: analyze
+      - id: lo-3
+        text: Interpret a logistic model's output as a calibrated probability.
+        bloom: understand
+
+  - slug: loss-functions
+    name: Loss Functions
+    description: >-
+      What a model is actually being asked to minimise, and why most standard losses
+      are negative log-likelihoods of an assumed noise model.
+    difficulty: 3
+    estimated_minutes: 210
+    tags: [ml, core]
+    requires:
+      - slug: supervised-learning-fundamentals
+        strength: 1.0
+      - slug: maximum-likelihood-estimation
+        strength: 0.9
+    objectives:
+      - id: lo-1
+        text: Select a loss appropriate to a task and justify the choice.
+        bloom: evaluate
+      - id: lo-2
+        text: Connect squared error and cross-entropy to their likelihood assumptions.
+        bloom: analyze
+
+  - slug: bias-variance-tradeoff
+    name: The Bias-Variance Trade-off
+    description: >-
+      Decomposing generalisation error, and recognising underfitting and overfitting
+      from learning curves rather than from intuition.
+    difficulty: 3
+    estimated_minutes: 210
+    tags: [ml, core]
+    requires:
+      - slug: supervised-learning-fundamentals
+        strength: 1.0
+      - slug: expectation-and-variance
+        strength: 0.9
+    objectives:
+      - id: lo-1
+        text: Decompose expected error into bias, variance, and irreducible noise.
+        bloom: analyze
+      - id: lo-2
+        text: Diagnose underfitting versus overfitting from a learning curve.
+        bloom: evaluate
+
+  - slug: regularization
+    name: Regularisation
+    description: >-
+      Constraining model complexity with L1 and L2 penalties, and why L1 produces
+      sparsity while L2 merely shrinks.
+    difficulty: 3
+    estimated_minutes: 210
+    tags: [ml]
+    requires:
+      - slug: linear-regression
+        strength: 1.0
+      - slug: vector-norms-and-distances
+        strength: 0.9
+      - slug: bias-variance-tradeoff
+        strength: 0.8
+    objectives:
+      - id: lo-1
+        text: Add L1 and L2 penalties to an objective and describe their effect.
+        bloom: apply
+      - id: lo-2
+        text: Explain geometrically why L1 drives coefficients to exactly zero.
+        bloom: analyze
+
+  - slug: model-evaluation-metrics
+    name: Model Evaluation Metrics
+    description: >-
+      Accuracy, precision, recall, F1, ROC-AUC, and the class-imbalance conditions
+      that make accuracy actively misleading.
+    difficulty: 3
+    estimated_minutes: 210
+    tags: [ml, core]
+    requires:
+      - slug: supervised-learning-fundamentals
+        strength: 1.0
+    objectives:
+      - id: lo-1
+        text: Compute precision, recall, and F1 from a confusion matrix.
+        bloom: apply
+      - id: lo-2
+        text: Choose a metric appropriate to the cost of each error type.
+        bloom: evaluate
+      - id: lo-3
+        text: Explain why 99% accuracy can indicate a useless model.
+        bloom: analyze
+
+  - slug: cross-validation
+    name: Cross-Validation
+    description: >-
+      Estimating generalisation with k-fold and stratified splits, and the grouping
+      and time-ordering constraints that naive shuffling violates.
+    difficulty: 3
+    estimated_minutes: 180
+    tags: [ml, core]
+    requires:
+      - slug: model-evaluation-metrics
+        strength: 1.0
+      - slug: bias-variance-tradeoff
+        strength: 0.8
+    objectives:
+      - id: lo-1
+        text: Implement k-fold cross-validation and report a variance-aware estimate.
+        bloom: apply
+      - id: lo-2
+        text: Explain why time-series data must not be shuffled before splitting.
+        bloom: analyze
+
+  - slug: decision-trees
+    name: Decision Trees
+    description: >-
+      Recursive partitioning by information gain or Gini impurity, and why an
+      unpruned tree memorises its training set.
+    difficulty: 3
+    estimated_minutes: 240
+    tags: [ml]
+    requires:
+      - slug: supervised-learning-fundamentals
+        strength: 1.0
+      - slug: recursion
+        strength: 0.7
+    objectives:
+      - id: lo-1
+        text: Compute information gain for a candidate split.
+        bloom: apply
+      - id: lo-2
+        text: Explain why depth must be limited and how pruning helps.
+        bloom: understand
+
+  - slug: ensemble-methods
+    name: Ensemble Methods
+    description: >-
+      Bagging, random forests, and gradient boosting — combining weak models into a
+      strong one, and the different mechanisms by which each reduces error.
+    difficulty: 4
+    estimated_minutes: 300
+    tags: [ml, advanced]
+    requires:
+      - slug: decision-trees
+        strength: 1.0
+      - slug: bias-variance-tradeoff
+        strength: 1.0
+    objectives:
+      - id: lo-1
+        text: Explain how bagging reduces variance and boosting reduces bias.
+        bloom: analyze
+      - id: lo-2
+        text: Tune a gradient boosting model and describe each hyperparameter's effect.
+        bloom: apply
+
+  - slug: support-vector-machines
+    name: Support Vector Machines
+    description: >-
+      Maximum-margin classification, the dual formulation, and the kernel trick for
+      non-linear boundaries.
+    difficulty: 4
+    estimated_minutes: 270
+    tags: [ml, advanced]
+    requires:
+      - slug: logistic-regression
+        strength: 0.8
+      - slug: constrained-optimization
+        strength: 1.0
+        rationale: The dual formulation is a Lagrangian problem; without it, SVMs are opaque.
+    objectives:
+      - id: lo-1
+        text: Explain the maximum-margin objective and the role of support vectors.
+        bloom: understand
+      - id: lo-2
+        text: Explain how the kernel trick avoids explicit feature expansion.
+        bloom: analyze
+
+  # --- Unsupervised learning ------------------------------------------------ #
+  - slug: unsupervised-learning-fundamentals
+    name: Unsupervised Learning Fundamentals
+    description: >-
+      Finding structure without labels, and the harder evaluation problem that comes
+      with having no ground truth to check against.
+    difficulty: 3
+    estimated_minutes: 180
+    tags: [ml]
+    requires:
+      - slug: numpy-fundamentals
+        strength: 0.9
+      - slug: vector-norms-and-distances
+        strength: 1.0
+    objectives:
+      - id: lo-1
+        text: Distinguish supervised from unsupervised problem settings.
+        bloom: understand
+      - id: lo-2
+        text: Explain why unsupervised results are harder to validate.
+        bloom: analyze
+
+  - slug: clustering-kmeans
+    name: Clustering with k-Means
+    description: >-
+      Iterative centroid assignment, choosing k, and the initialisation sensitivity
+      that makes a single run untrustworthy.
+    difficulty: 3
+    estimated_minutes: 210
+    tags: [ml]
+    requires:
+      - slug: unsupervised-learning-fundamentals
+        strength: 1.0
+    objectives:
+      - id: lo-1
+        text: Execute the k-means update steps on a small dataset.
+        bloom: apply
+      - id: lo-2
+        text: Choose k using the elbow or silhouette method and state its limits.
+        bloom: evaluate
+
+  - slug: dimensionality-reduction-pca
+    name: Dimensionality Reduction with PCA
+    description: >-
+      Projecting onto the directions of greatest variance, and reading explained
+      variance to decide how many components to keep.
+    difficulty: 4
+    estimated_minutes: 240
+    tags: [ml, advanced]
+    requires:
+      - slug: unsupervised-learning-fundamentals
+        strength: 0.9
+      - slug: eigenvalues-and-eigenvectors
+        strength: 1.0
+        rationale: PCA is the eigendecomposition of a covariance matrix.
+    objectives:
+      - id: lo-1
+        text: Explain PCA as an eigendecomposition of the covariance matrix.
+        bloom: analyze
+      - id: lo-2
+        text: Choose a component count from an explained-variance curve.
+        bloom: evaluate
+
+  # --- Deep learning -------------------------------------------------------- #
+  - slug: neural-network-fundamentals
+    name: Neural Network Fundamentals
+    description: >-
+      Layers, weights, biases, and the forward pass — a neural network as a stack of
+      linear maps with non-linearities between them.
+    difficulty: 4
+    estimated_minutes: 300
+    tags: [deep-learning, core]
+    requires:
+      - slug: logistic-regression
+        strength: 1.0
+        rationale: A single neuron with a sigmoid is exactly logistic regression.
+      - slug: matrix-operations
+        strength: 1.0
+      - slug: gradient-descent
+        strength: 1.0
+    objectives:
+      - id: lo-1
+        text: Compute a forward pass through a small network by hand.
+        bloom: apply
+      - id: lo-2
+        text: Explain why a network without non-linearities collapses to a linear model.
+        bloom: analyze
+      - id: lo-3
+        text: Describe how layer widths and depths determine parameter count.
+        bloom: understand
+
+  - slug: activation-functions
+    name: Activation Functions
+    description: >-
+      Sigmoid, tanh, ReLU and its variants — what each does to gradient flow, and
+      where saturation stalls learning.
+    difficulty: 3
+    estimated_minutes: 150
+    tags: [deep-learning]
+    requires:
+      - slug: neural-network-fundamentals
+        strength: 1.0
+    objectives:
+      - id: lo-1
+        text: Compare activation functions by their gradient behaviour.
+        bloom: evaluate
+      - id: lo-2
+        text: Explain how saturation causes vanishing gradients.
+        bloom: analyze
+
+  - slug: backpropagation
+    name: Backpropagation
+    description: >-
+      Computing gradients by applying the chain rule backwards through a network.
+      The single concept whose difficulty most reliably traces to a weak chain rule
+      rather than to anything about neural networks.
+    difficulty: 4
+    estimated_minutes: 300
+    tags: [deep-learning, core]
+    requires:
+      - slug: neural-network-fundamentals
+        strength: 1.0
+      - slug: chain-rule
+        strength: 1.0
+        rationale: Backpropagation is the chain rule over a computational graph.
+      - slug: gradients-and-jacobians
+        strength: 1.0
+    objectives:
+      - id: lo-1
+        text: Derive the gradient of a loss with respect to a hidden-layer weight.
+        bloom: analyze
+      - id: lo-2
+        text: Trace a backward pass through a two-layer network numerically.
+        bloom: apply
+      - id: lo-3
+        text: Explain how gradients vanish or explode across many layers.
+        bloom: analyze
+
+  - slug: training-deep-networks
+    name: Training Deep Networks
+    description: >-
+      Making training actually work: initialisation, normalisation, dropout,
+      learning-rate schedules, and reading a loss curve to diagnose what went wrong.
+    difficulty: 4
+    estimated_minutes: 330
+    tags: [deep-learning, core]
+    requires:
+      - slug: backpropagation
+        strength: 1.0
+      - slug: regularization
+        strength: 0.9
+      - slug: activation-functions
+        strength: 0.8
+    objectives:
+      - id: lo-1
+        text: Diagnose a failed training run from its loss curves.
+        bloom: analyze
+      - id: lo-2
+        text: Apply batch normalisation and dropout and explain their effects.
+        bloom: apply
+      - id: lo-3
+        text: Select a learning-rate schedule and justify it.
+        bloom: evaluate
+
+  - slug: pytorch-fundamentals
+    name: PyTorch Fundamentals
+    description: >-
+      Tensors, autograd, modules, and the training loop — mapping the mathematics onto
+      the framework that executes it.
+    difficulty: 3
+    estimated_minutes: 300
+    tags: [deep-learning, tooling, core]
+    requires:
+      - slug: numpy-fundamentals
+        strength: 1.0
+      - slug: neural-network-fundamentals
+        strength: 0.9
+      - slug: python-oop
+        strength: 0.8
+    objectives:
+      - id: lo-1
+        text: Implement a training loop with forward, loss, backward, and step.
+        bloom: apply
+      - id: lo-2
+        text: Explain what autograd records and when to disable gradient tracking.
+        bloom: understand
+      - id: lo-3
+        text: Debug a shape mismatch in a model definition.
+        bloom: analyze
+
+  - slug: convolutional-networks
+    name: Convolutional Networks
+    description: >-
+      Convolution, pooling, and weight sharing — the architectural priors that make
+      vision models tractable.
+    difficulty: 4
+    estimated_minutes: 300
+    tags: [deep-learning, advanced]
+    requires:
+      - slug: training-deep-networks
+        strength: 1.0
+      - slug: pytorch-fundamentals
+        strength: 0.8
+    objectives:
+      - id: lo-1
+        text: Compute output dimensions given kernel size, stride, and padding.
+        bloom: apply
+      - id: lo-2
+        text: Explain how weight sharing yields translation equivariance.
+        bloom: analyze
+
+  - slug: embeddings-and-representation
+    name: Embeddings and Representation Learning
+    description: >-
+      Learned dense vectors that place semantically similar items near one another —
+      the mechanism behind semantic search and retrieval.
+    difficulty: 4
+    estimated_minutes: 240
+    tags: [deep-learning]
+    requires:
+      - slug: neural-network-fundamentals
+        strength: 1.0
+      - slug: vector-norms-and-distances
+        strength: 1.0
+    objectives:
+      - id: lo-1
+        text: Explain what an embedding space encodes and how distance is interpreted.
+        bloom: understand
+      - id: lo-2
+        text: Use embeddings to retrieve semantically similar items.
+        bloom: apply
+
+  - slug: sequence-models
+    name: Sequence Models
+    description: >-
+      Recurrent architectures and gating: modelling order-dependent data, and the
+      long-range dependency problem that motivated attention.
+    difficulty: 4
+    estimated_minutes: 300
+    tags: [deep-learning, advanced]
+    requires:
+      - slug: training-deep-networks
+        strength: 1.0
+      - slug: embeddings-and-representation
+        strength: 0.8
+    objectives:
+      - id: lo-1
+        text: Explain how a recurrent network carries state across time steps.
+        bloom: understand
+      - id: lo-2
+        text: Explain why long-range dependencies are hard for plain RNNs.
+        bloom: analyze
+
+  - slug: attention-and-transformers
+    name: Attention and Transformers
+    description: >-
+      Query-key-value attention, multi-head attention, and positional encoding — the
+      architecture underneath modern language models.
+    difficulty: 5
+    estimated_minutes: 360
+    tags: [deep-learning, advanced]
+    requires:
+      - slug: sequence-models
+        strength: 0.9
+      - slug: matrix-operations
+        strength: 1.0
+      - slug: embeddings-and-representation
+        strength: 1.0
+    builds_on: [sequence-models]
+    objectives:
+      - id: lo-1
+        text: Compute scaled dot-product attention for a small example.
+        bloom: apply
+      - id: lo-2
+        text: Explain what queries, keys, and values represent.
+        bloom: understand
+      - id: lo-3
+        text: Explain why positional encoding is required at all.
+        bloom: analyze
+
+  # --- Production ----------------------------------------------------------- #
+  - slug: experiment-tracking
+    name: Experiment Tracking
+    description: >-
+      Recording configurations, metrics, and artefacts so a result can be reproduced
+      and two runs can be compared honestly.
+    difficulty: 2
+    estimated_minutes: 150
+    tags: [mlops]
+    requires:
+      - slug: model-evaluation-metrics
+        strength: 0.8
+      - slug: version-control-git
+        strength: 0.7
+    objectives:
+      - id: lo-1
+        text: Log a run such that another person could reproduce it exactly.
+        bloom: apply
+      - id: lo-2
+        text: Explain why an unrecorded random seed makes a result irreproducible.
+        bloom: understand
+
+  - slug: model-deployment
+    name: Model Deployment
+    description: >-
+      Serving a model behind an API: packaging, latency, versioning, and rollback.
+    difficulty: 4
+    estimated_minutes: 300
+    tags: [mlops, engineering]
+    requires:
+      - slug: pytorch-fundamentals
+        strength: 0.8
+      - slug: virtual-environments-and-dependencies
+        strength: 0.9
+      - slug: testing-fundamentals
+        strength: 0.8
+    objectives:
+      - id: lo-1
+        text: Serve a trained model behind an HTTP endpoint.
+        bloom: apply
+      - id: lo-2
+        text: Explain why model artefacts must be versioned alongside code.
+        bloom: understand
+      - id: lo-3
+        text: Design a rollback path for a bad model release.
+        bloom: create
+
+  - slug: model-monitoring
+    name: Monitoring and Drift
+    description: >-
+      Watching a model after release: data drift, concept drift, and the delayed
+      ground truth that makes silent degradation the normal failure mode.
+    difficulty: 4
+    estimated_minutes: 210
+    tags: [mlops]
+    requires:
+      - slug: model-deployment
+        strength: 1.0
+      - slug: statistical-inference
+        strength: 0.7
+    objectives:
+      - id: lo-1
+        text: Distinguish data drift from concept drift with examples.
+        bloom: analyze
+      - id: lo-2
+        text: Design an alert that fires before users notice degradation.
+        bloom: create
+
+  - slug: ml-system-design
+    name: ML System Design
+    description: >-
+      Composing the whole thing: framing the problem, choosing a baseline, defining
+      metrics that track business value, and planning for retraining.
+    difficulty: 5
+    estimated_minutes: 360
+    tags: [mlops, advanced]
+    requires:
+      - slug: model-deployment
+        strength: 1.0
+      - slug: cross-validation
+        strength: 0.9
+      - slug: data-pipelines
+        strength: 0.8
+      - slug: model-monitoring
+        strength: 0.8
+    objectives:
+      - id: lo-1
+        text: Design an end-to-end system for a stated business problem.
+        bloom: create
+      - id: lo-2
+        text: Choose an offline metric that tracks the online objective.
+        bloom: evaluate
+      - id: lo-3
+        text: Justify a baseline before proposing a complex model.
+        bloom: evaluate

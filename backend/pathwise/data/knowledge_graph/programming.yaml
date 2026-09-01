@@ -1,0 +1,612 @@
+# Programming foundations, data structures, and algorithms.
+#
+# Scoped to what a machine-learning or software engineer actually needs, in the order
+# competence is built rather than the order a textbook presents it.
+
+version: 1
+domain: programming
+description: >-
+  Python fluency, computer science fundamentals, and the data structures and
+  algorithms that underpin both engineering interviews and real systems.
+
+concepts:
+  # --- Getting started ------------------------------------------------------ #
+  - slug: programming-basics
+    name: Programming Basics
+    description: >-
+      Variables, expressions, statements, and the mental model of a program as a
+      sequence of state changes. Language-agnostic groundwork.
+    difficulty: 1
+    estimated_minutes: 180
+    tags: [foundations]
+    objectives:
+      - id: lo-1
+        text: Trace the value of a variable through a short sequence of statements.
+        bloom: understand
+      - id: lo-2
+        text: Distinguish a statement from an expression and give examples of each.
+        bloom: understand
+
+  - slug: python-syntax-and-types
+    name: Python Syntax and Core Types
+    description: >-
+      Python's syntax and its built-in types — int, float, str, bool, None — along
+      with truthiness and the type-coercion rules that surprise newcomers.
+    difficulty: 1
+    estimated_minutes: 180
+    tags: [python, foundations]
+    requires:
+      - slug: programming-basics
+        strength: 1.0
+    objectives:
+      - id: lo-1
+        text: Write syntactically correct Python using the core built-in types.
+        bloom: apply
+      - id: lo-2
+        text: Predict the truthiness of a value in a conditional.
+        bloom: understand
+
+  - slug: python-control-flow
+    name: Control Flow
+    description: >-
+      Conditionals, loops, and comprehensions — including when a comprehension is
+      clearer than a loop and when it is merely shorter.
+    difficulty: 1
+    estimated_minutes: 180
+    tags: [python, foundations]
+    requires:
+      - slug: python-syntax-and-types
+        strength: 1.0
+    objectives:
+      - id: lo-1
+        text: Implement branching and iteration to solve a small problem.
+        bloom: apply
+      - id: lo-2
+        text: Rewrite a loop as a comprehension where it improves clarity.
+        bloom: evaluate
+
+  - slug: python-functions
+    name: Functions and Scope
+    description: >-
+      Defining functions, arguments and defaults, return values, closures, and the
+      LEGB scope rules — plus the mutable-default-argument trap.
+    difficulty: 2
+    estimated_minutes: 210
+    tags: [python, core]
+    requires:
+      - slug: python-control-flow
+        strength: 1.0
+    objectives:
+      - id: lo-1
+        text: Write functions with positional, keyword, and default arguments.
+        bloom: apply
+      - id: lo-2
+        text: Explain Python's scope resolution order.
+        bloom: understand
+      - id: lo-3
+        text: Explain why a mutable default argument is evaluated once, not per call.
+        bloom: analyze
+
+  - slug: python-data-structures
+    name: Python Data Structures
+    description: >-
+      Lists, tuples, dictionaries, and sets: their operations, their mutability, and
+      the performance characteristics that decide which one to reach for.
+    difficulty: 2
+    estimated_minutes: 240
+    tags: [python, core]
+    requires:
+      - slug: python-functions
+        strength: 1.0
+    objectives:
+      - id: lo-1
+        text: Choose the appropriate built-in structure for a stated access pattern.
+        bloom: evaluate
+      - id: lo-2
+        text: State the average-case cost of lookup, insertion, and deletion for each.
+        bloom: remember
+      - id: lo-3
+        text: Explain why dictionary keys must be hashable.
+        bloom: understand
+
+  - slug: python-error-handling
+    name: Errors and Exceptions
+    description: >-
+      Raising, catching, and defining exceptions, and why catching a bare Exception
+      hides the failures you most need to see.
+    difficulty: 2
+    estimated_minutes: 150
+    tags: [python]
+    requires:
+      - slug: python-functions
+        strength: 1.0
+    objectives:
+      - id: lo-1
+        text: Handle specific exception types and re-raise where appropriate.
+        bloom: apply
+      - id: lo-2
+        text: Define a custom exception hierarchy for a domain.
+        bloom: create
+
+  - slug: python-oop
+    name: Object-Oriented Python
+    description: >-
+      Classes, instances, inheritance, dunder methods, and dataclasses — with a
+      realistic view of when a class is warranted over a function.
+    difficulty: 3
+    estimated_minutes: 270
+    tags: [python]
+    requires:
+      - slug: python-functions
+        strength: 1.0
+    objectives:
+      - id: lo-1
+        text: Define classes with initialisers, methods, and properties.
+        bloom: apply
+      - id: lo-2
+        text: Use inheritance and composition, and justify the choice between them.
+        bloom: evaluate
+      - id: lo-3
+        text: Implement dunder methods to integrate with Python's protocols.
+        bloom: create
+
+  - slug: python-modules-and-packaging
+    name: Modules and Packages
+    description: >-
+      Imports, module resolution, package layout, and the circular-import problem.
+    difficulty: 2
+    estimated_minutes: 150
+    tags: [python, tooling]
+    requires:
+      - slug: python-functions
+        strength: 1.0
+    objectives:
+      - id: lo-1
+        text: Organise code into modules and packages with clean import paths.
+        bloom: apply
+      - id: lo-2
+        text: Diagnose and resolve a circular import.
+        bloom: analyze
+
+  - slug: virtual-environments-and-dependencies
+    name: Environments and Dependencies
+    description: >-
+      Virtual environments, dependency pinning, and reproducible installs — the
+      difference between code that runs on your machine and code that runs anywhere.
+    difficulty: 2
+    estimated_minutes: 120
+    tags: [python, tooling]
+    requires:
+      - slug: python-modules-and-packaging
+        strength: 0.9
+    objectives:
+      - id: lo-1
+        text: Create an isolated environment and pin its dependencies.
+        bloom: apply
+      - id: lo-2
+        text: Explain why unpinned dependencies break reproducibility.
+        bloom: understand
+
+  - slug: file-io-and-serialization
+    name: File I/O and Serialisation
+    description: >-
+      Reading and writing files, context managers, and the JSON and CSV formats,
+      including encoding pitfalls.
+    difficulty: 2
+    estimated_minutes: 150
+    tags: [python]
+    requires:
+      - slug: python-error-handling
+        strength: 0.8
+    objectives:
+      - id: lo-1
+        text: Read and write text and structured files using context managers.
+        bloom: apply
+      - id: lo-2
+        text: Explain why a context manager is preferable to a manual close.
+        bloom: understand
+
+  - slug: version-control-git
+    name: Version Control with Git
+    description: >-
+      Commits, branches, merges, and rebases, plus reading history to understand why
+      code is the way it is.
+    difficulty: 2
+    estimated_minutes: 210
+    tags: [tooling, core]
+    requires:
+      - slug: programming-basics
+        strength: 0.6
+    objectives:
+      - id: lo-1
+        text: Branch, commit, and merge without losing work.
+        bloom: apply
+      - id: lo-2
+        text: Explain the difference between merge and rebase and when each is appropriate.
+        bloom: evaluate
+
+  - slug: testing-fundamentals
+    name: Testing Fundamentals
+    description: >-
+      Unit tests, fixtures, and assertions, and what makes a test worth having: it
+      fails when behaviour breaks and not otherwise.
+    difficulty: 3
+    estimated_minutes: 210
+    tags: [python, engineering, core]
+    requires:
+      - slug: python-functions
+        strength: 1.0
+    objectives:
+      - id: lo-1
+        text: Write unit tests with clear arrange-act-assert structure.
+        bloom: apply
+      - id: lo-2
+        text: Identify a test that passes regardless of whether the code is correct.
+        bloom: analyze
+      - id: lo-3
+        text: Use fixtures and parametrisation to avoid duplicated test setup.
+        bloom: apply
+
+  - slug: debugging-and-profiling
+    name: Debugging and Profiling
+    description: >-
+      Reading tracebacks, using a debugger, and measuring where time actually goes
+      instead of guessing.
+    difficulty: 3
+    estimated_minutes: 180
+    tags: [python, engineering]
+    requires:
+      - slug: python-error-handling
+        strength: 0.9
+    objectives:
+      - id: lo-1
+        text: Locate a fault from a traceback and a breakpoint session.
+        bloom: analyze
+      - id: lo-2
+        text: Profile a program and identify the dominant cost.
+        bloom: analyze
+
+  # --- Data structures ------------------------------------------------------ #
+  - slug: complexity-analysis
+    name: Time and Space Complexity
+    description: >-
+      Big-O notation and the discipline of reasoning about how cost grows with input
+      size rather than benchmarking one case and hoping.
+    difficulty: 3
+    estimated_minutes: 210
+    tags: [algorithms, core]
+    aliases: [big-o, asymptotic-analysis]
+    requires:
+      - slug: python-data-structures
+        strength: 0.8
+    objectives:
+      - id: lo-1
+        text: Derive the time complexity of a loop-based algorithm.
+        bloom: analyze
+      - id: lo-2
+        text: Distinguish best, average, and worst case for an algorithm.
+        bloom: understand
+      - id: lo-3
+        text: Analyse space complexity including recursion stack usage.
+        bloom: analyze
+
+  - slug: arrays-and-strings
+    name: Arrays and Strings
+    description: >-
+      Contiguous storage, indexing, slicing, and the two-pointer and sliding-window
+      techniques that solve a large share of array problems.
+    difficulty: 2
+    estimated_minutes: 240
+    tags: [algorithms, data-structures]
+    requires:
+      - slug: python-data-structures
+        strength: 1.0
+    objectives:
+      - id: lo-1
+        text: Apply two-pointer and sliding-window techniques to array problems.
+        bloom: apply
+      - id: lo-2
+        text: Explain why appending to a dynamic array is amortised constant time.
+        bloom: understand
+
+  - slug: linked-lists
+    name: Linked Lists
+    description: >-
+      Node-based sequences, and the pointer manipulation that trades away random
+      access for cheap insertion.
+    difficulty: 2
+    estimated_minutes: 180
+    tags: [algorithms, data-structures]
+    requires:
+      - slug: python-data-structures
+        strength: 1.0
+    objectives:
+      - id: lo-1
+        text: Implement insertion, deletion, and reversal on a singly linked list.
+        bloom: apply
+      - id: lo-2
+        text: Compare linked lists with dynamic arrays across access patterns.
+        bloom: evaluate
+
+  - slug: stacks-and-queues
+    name: Stacks and Queues
+    description: >-
+      LIFO and FIFO access disciplines, and the problems whose structure they mirror.
+    difficulty: 2
+    estimated_minutes: 150
+    tags: [algorithms, data-structures]
+    requires:
+      - slug: python-data-structures
+        strength: 1.0
+    objectives:
+      - id: lo-1
+        text: Implement a stack and a queue and state the cost of each operation.
+        bloom: apply
+      - id: lo-2
+        text: Recognise a problem whose structure calls for a stack.
+        bloom: analyze
+
+  - slug: hash-tables
+    name: Hash Tables
+    description: >-
+      Hashing, collision resolution, and load factor — why dictionary lookup is
+      constant on average and what makes it degrade.
+    difficulty: 3
+    estimated_minutes: 210
+    tags: [algorithms, data-structures, core]
+    requires:
+      - slug: arrays-and-strings
+        strength: 0.9
+      - slug: complexity-analysis
+        strength: 0.9
+    objectives:
+      - id: lo-1
+        text: Explain how hashing produces average constant-time lookup.
+        bloom: understand
+      - id: lo-2
+        text: Describe collision-resolution strategies and their trade-offs.
+        bloom: evaluate
+      - id: lo-3
+        text: Solve a problem by trading space for time with a hash map.
+        bloom: apply
+
+  - slug: recursion
+    name: Recursion
+    description: >-
+      Functions defined in terms of themselves: base cases, recursive cases, the call
+      stack, and recognising when a problem is self-similar.
+    difficulty: 3
+    estimated_minutes: 210
+    tags: [algorithms, core]
+    requires:
+      - slug: python-functions
+        strength: 1.0
+    objectives:
+      - id: lo-1
+        text: Write a recursive solution with a correct base case.
+        bloom: apply
+      - id: lo-2
+        text: Trace a recursive call stack and its space cost.
+        bloom: analyze
+      - id: lo-3
+        text: Convert between recursive and iterative formulations.
+        bloom: create
+
+  - slug: trees-and-binary-search-trees
+    name: Trees and Binary Search Trees
+    description: >-
+      Hierarchical structures, traversal orders, and the BST invariant that makes
+      ordered search logarithmic — until the tree becomes unbalanced.
+    difficulty: 3
+    estimated_minutes: 270
+    tags: [algorithms, data-structures]
+    requires:
+      - slug: recursion
+        strength: 1.0
+      - slug: linked-lists
+        strength: 0.7
+      - slug: complexity-analysis
+        strength: 0.8
+    objectives:
+      - id: lo-1
+        text: Implement pre-order, in-order, and post-order traversals.
+        bloom: apply
+      - id: lo-2
+        text: State the BST invariant and use it to search efficiently.
+        bloom: understand
+      - id: lo-3
+        text: Explain how an unbalanced tree degrades to linear search.
+        bloom: analyze
+
+  - slug: heaps-and-priority-queues
+    name: Heaps and Priority Queues
+    description: >-
+      The heap invariant, sift-up and sift-down, and the top-k problems heaps solve
+      efficiently.
+    difficulty: 3
+    estimated_minutes: 180
+    tags: [algorithms, data-structures]
+    requires:
+      - slug: trees-and-binary-search-trees
+        strength: 0.9
+    objectives:
+      - id: lo-1
+        text: Implement heap insertion and extraction with correct sifting.
+        bloom: apply
+      - id: lo-2
+        text: Use a heap to solve a top-k problem in n log k time.
+        bloom: apply
+
+  - slug: graphs-representation
+    name: Graph Representations
+    description: >-
+      Adjacency lists and matrices, directed versus undirected, weighted versus
+      unweighted, and choosing a representation for a given density.
+    difficulty: 3
+    estimated_minutes: 180
+    tags: [algorithms, data-structures]
+    requires:
+      - slug: hash-tables
+        strength: 0.8
+    objectives:
+      - id: lo-1
+        text: Represent a graph as an adjacency list and as a matrix.
+        bloom: apply
+      - id: lo-2
+        text: Choose a representation given graph density and required operations.
+        bloom: evaluate
+
+  - slug: graph-traversal
+    name: Graph Traversal
+    description: >-
+      Breadth-first and depth-first search, cycle detection, and topological sorting —
+      the same algorithms Pathwise itself runs over its knowledge graph.
+    difficulty: 3
+    estimated_minutes: 240
+    tags: [algorithms, core]
+    requires:
+      - slug: graphs-representation
+        strength: 1.0
+      - slug: stacks-and-queues
+        strength: 0.9
+    objectives:
+      - id: lo-1
+        text: Implement BFS and DFS and state when each is appropriate.
+        bloom: apply
+      - id: lo-2
+        text: Detect a cycle in a directed graph.
+        bloom: analyze
+      - id: lo-3
+        text: Produce a topological ordering of a DAG.
+        bloom: apply
+
+  # --- Algorithms ----------------------------------------------------------- #
+  - slug: sorting-algorithms
+    name: Sorting Algorithms
+    description: >-
+      Merge sort, quicksort, and heapsort: their recurrences, their stability, and
+      why comparison sorting cannot beat n log n.
+    difficulty: 3
+    estimated_minutes: 240
+    tags: [algorithms]
+    requires:
+      - slug: arrays-and-strings
+        strength: 0.9
+      - slug: complexity-analysis
+        strength: 1.0
+    objectives:
+      - id: lo-1
+        text: Implement merge sort and quicksort and analyse their complexity.
+        bloom: apply
+      - id: lo-2
+        text: Explain the n log n lower bound for comparison sorting.
+        bloom: understand
+      - id: lo-3
+        text: Explain what sort stability means and when it matters.
+        bloom: understand
+
+  - slug: searching-algorithms
+    name: Binary Search
+    description: >-
+      Halving a sorted search space, and the boundary conditions that make binary
+      search notoriously easy to write subtly wrong.
+    difficulty: 2
+    estimated_minutes: 150
+    tags: [algorithms]
+    requires:
+      - slug: sorting-algorithms
+        strength: 0.7
+    objectives:
+      - id: lo-1
+        text: Implement binary search with correct boundary handling.
+        bloom: apply
+      - id: lo-2
+        text: Apply binary search to a monotonic predicate rather than a sorted array.
+        bloom: create
+
+  - slug: dynamic-programming
+    name: Dynamic Programming
+    description: >-
+      Overlapping subproblems and optimal substructure, solved by memoisation or
+      tabulation. The hardest common interview topic, and the one that most rewards
+      recognising a pattern rather than memorising solutions.
+    difficulty: 4
+    estimated_minutes: 360
+    tags: [algorithms, advanced]
+    requires:
+      - slug: recursion
+        strength: 1.0
+      - slug: complexity-analysis
+        strength: 0.9
+    objectives:
+      - id: lo-1
+        text: Identify overlapping subproblems and optimal substructure in a problem.
+        bloom: analyze
+      - id: lo-2
+        text: Convert a recursive solution to a memoised one.
+        bloom: apply
+      - id: lo-3
+        text: Write a bottom-up tabulation and state its space complexity.
+        bloom: create
+
+  - slug: greedy-algorithms
+    name: Greedy Algorithms
+    description: >-
+      Taking the locally best option, and — the part that matters — proving that doing
+      so yields a globally optimal result.
+    difficulty: 3
+    estimated_minutes: 210
+    tags: [algorithms]
+    requires:
+      - slug: sorting-algorithms
+        strength: 0.8
+    related: [dynamic-programming]
+    objectives:
+      - id: lo-1
+        text: Apply a greedy strategy to interval scheduling.
+        bloom: apply
+      - id: lo-2
+        text: Construct a counterexample where a greedy choice fails.
+        bloom: evaluate
+
+  # --- Data ----------------------------------------------------------------- #
+  - slug: sql-fundamentals
+    name: SQL Fundamentals
+    description: >-
+      Querying relational data: SELECT, JOIN, GROUP BY, and the aggregate functions
+      that turn rows into answers.
+    difficulty: 2
+    estimated_minutes: 240
+    tags: [data, core]
+    requires:
+      - slug: programming-basics
+        strength: 0.6
+    objectives:
+      - id: lo-1
+        text: Write queries with joins, filtering, and aggregation.
+        bloom: apply
+      - id: lo-2
+        text: Explain the difference between inner and outer joins.
+        bloom: understand
+      - id: lo-3
+        text: Explain why WHERE and HAVING filter at different stages.
+        bloom: analyze
+
+  - slug: relational-data-modeling
+    name: Relational Data Modelling
+    description: >-
+      Keys, relationships, normalisation, and the deliberate denormalisation that
+      real systems trade correctness guarantees for.
+    difficulty: 3
+    estimated_minutes: 210
+    tags: [data]
+    requires:
+      - slug: sql-fundamentals
+        strength: 1.0
+    objectives:
+      - id: lo-1
+        text: Design a normalised schema for a described domain.
+        bloom: create
+      - id: lo-2
+        text: Justify a denormalisation decision in terms of access patterns.
+        bloom: evaluate

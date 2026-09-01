@@ -1,0 +1,588 @@
+# Mathematics for machine learning and computer science.
+#
+# Granularity rule: a concept should be studiable in roughly 1-6 hours and be
+# assessable on its own. "Linear algebra" is too coarse to blame for a failure;
+# "eigenvalues and eigenvectors" is the right size.
+#
+# `requires` is authored on the dependent ("to learn X you need Y") because that is
+# how a person reasons about it. `strength` is how hard the requirement is: 1.0 means
+# genuinely blocking, 0.6 means helpful but survivable.
+
+version: 1
+domain: mathematics
+description: >-
+  Calculus, linear algebra, probability, statistics, and optimisation, scoped to what
+  machine learning and algorithms work actually requires.
+
+concepts:
+  # --- Foundations ---------------------------------------------------------- #
+  - slug: functions-and-graphs
+    name: Functions and Graphs
+    description: >-
+      Functions as mappings, domain and range, and the shapes of the function families
+      that recur throughout machine learning: linear, polynomial, exponential,
+      logarithmic, and sigmoid.
+    difficulty: 2
+    estimated_minutes: 180
+    tags: [precalculus, foundations]
+    objectives:
+      - id: lo-1
+        text: Evaluate a function and state its domain and range.
+        bloom: apply
+      - id: lo-2
+        text: Sketch and recognise linear, exponential, logarithmic, and sigmoid curves.
+        bloom: understand
+      - id: lo-3
+        text: Compose and invert functions, and explain when an inverse exists.
+        bloom: apply
+
+  - slug: limits-and-continuity
+    name: Limits and Continuity
+    description: >-
+      What it means for a function to approach a value, and why continuity is the
+      precondition that makes differentiation possible.
+    difficulty: 3
+    estimated_minutes: 180
+    tags: [calculus]
+    requires:
+      - slug: functions-and-graphs
+        strength: 1.0
+        rationale: Limits are defined on functions; you cannot take one without them.
+    objectives:
+      - id: lo-1
+        text: Evaluate limits algebraically, including indeterminate forms.
+        bloom: apply
+      - id: lo-2
+        text: Determine whether a function is continuous at a point and justify why.
+        bloom: analyze
+
+  # --- Differential calculus ------------------------------------------------ #
+  - slug: derivatives
+    name: Derivatives
+    description: >-
+      The derivative as an instantaneous rate of change and as the slope of a tangent,
+      plus the mechanical rules for computing one. This is the single most load-bearing
+      idea in the mathematics of machine learning.
+    difficulty: 3
+    estimated_minutes: 300
+    tags: [calculus, core]
+    aliases: [differentiation, differential-calculus]
+    requires:
+      - slug: limits-and-continuity
+        strength: 1.0
+        rationale: The derivative is defined as a limit of difference quotients.
+    objectives:
+      - id: lo-1
+        text: State the limit definition of the derivative and interpret it geometrically.
+        bloom: understand
+      - id: lo-2
+        text: Differentiate polynomial, exponential, logarithmic, and trigonometric functions.
+        bloom: apply
+      - id: lo-3
+        text: Apply the product and quotient rules to composite expressions.
+        bloom: apply
+      - id: lo-4
+        text: Use the sign of the derivative to locate maxima and minima.
+        bloom: analyze
+
+  - slug: chain-rule
+    name: The Chain Rule
+    description: >-
+      Differentiating a composition of functions by multiplying local rates of change.
+      Backpropagation is the chain rule applied over a computational graph, so a
+      shaky grasp here reliably surfaces later as confusion about training.
+    difficulty: 3
+    estimated_minutes: 150
+    tags: [calculus, core]
+    requires:
+      - slug: derivatives
+        strength: 1.0
+    objectives:
+      - id: lo-1
+        text: Differentiate nested compositions of two or more functions.
+        bloom: apply
+      - id: lo-2
+        text: Explain the chain rule as a product of local sensitivities.
+        bloom: understand
+      - id: lo-3
+        text: Trace derivative flow backwards through a small computational graph.
+        bloom: analyze
+
+  - slug: partial-derivatives
+    name: Partial Derivatives
+    description: >-
+      Differentiating a multivariable function with respect to one variable while
+      holding the others fixed — the step from single-variable calculus to the
+      multivariable setting every model parameter lives in.
+    difficulty: 3
+    estimated_minutes: 180
+    tags: [calculus, multivariable]
+    requires:
+      - slug: derivatives
+        strength: 1.0
+    objectives:
+      - id: lo-1
+        text: Compute partial derivatives of a multivariable function.
+        bloom: apply
+      - id: lo-2
+        text: Interpret a partial derivative as a directional rate of change.
+        bloom: understand
+
+  - slug: gradients-and-jacobians
+    name: Gradients and Jacobians
+    description: >-
+      The gradient as the vector of partial derivatives pointing in the direction of
+      steepest ascent, and the Jacobian as its generalisation to vector-valued
+      functions.
+    difficulty: 4
+    estimated_minutes: 210
+    tags: [calculus, multivariable, core]
+    requires:
+      - slug: partial-derivatives
+        strength: 1.0
+      - slug: chain-rule
+        strength: 0.9
+      - slug: vectors-and-spaces
+        strength: 0.8
+        rationale: A gradient is a vector; its geometry only makes sense in a vector space.
+    objectives:
+      - id: lo-1
+        text: Compute the gradient of a scalar function of several variables.
+        bloom: apply
+      - id: lo-2
+        text: Explain why the gradient points in the direction of steepest ascent.
+        bloom: understand
+      - id: lo-3
+        text: Assemble the Jacobian of a vector-valued function.
+        bloom: apply
+
+  - slug: integrals
+    name: Integration
+    description: >-
+      Accumulation and area under a curve, and the fundamental theorem linking
+      integration to differentiation. Needed mainly for continuous probability.
+    difficulty: 3
+    estimated_minutes: 240
+    tags: [calculus]
+    requires:
+      - slug: derivatives
+        strength: 0.9
+    objectives:
+      - id: lo-1
+        text: Evaluate definite and indefinite integrals of standard functions.
+        bloom: apply
+      - id: lo-2
+        text: State the fundamental theorem of calculus and explain what it connects.
+        bloom: understand
+
+  # --- Linear algebra ------------------------------------------------------- #
+  - slug: vectors-and-spaces
+    name: Vectors and Vector Spaces
+    description: >-
+      Vectors as both geometric arrows and ordered tuples, with the operations —
+      addition, scaling, dot product — that every numerical library is built on.
+    difficulty: 2
+    estimated_minutes: 210
+    tags: [linear-algebra, core]
+    objectives:
+      - id: lo-1
+        text: Perform vector addition, scaling, and dot products by hand.
+        bloom: apply
+      - id: lo-2
+        text: Interpret the dot product geometrically as projection and alignment.
+        bloom: understand
+      - id: lo-3
+        text: Determine whether a set of vectors is linearly independent.
+        bloom: analyze
+
+  - slug: vector-norms-and-distances
+    name: Norms and Distance Measures
+    description: >-
+      Measuring the size of a vector and the distance between two, via L1, L2, and
+      cosine similarity — the basis of both regularisation and retrieval.
+    difficulty: 2
+    estimated_minutes: 150
+    tags: [linear-algebra]
+    requires:
+      - slug: vectors-and-spaces
+        strength: 1.0
+    objectives:
+      - id: lo-1
+        text: Compute L1, L2, and cosine distances between vectors.
+        bloom: apply
+      - id: lo-2
+        text: Choose an appropriate distance measure for a given problem and justify it.
+        bloom: evaluate
+
+  - slug: matrix-operations
+    name: Matrix Operations
+    description: >-
+      Matrices as tables of numbers and as transformations: multiplication,
+      transposition, inversion, and why matrix multiplication is not commutative.
+    difficulty: 2
+    estimated_minutes: 240
+    tags: [linear-algebra, core]
+    aliases: [matrices, matrix-multiplication]
+    requires:
+      - slug: vectors-and-spaces
+        strength: 1.0
+    objectives:
+      - id: lo-1
+        text: Multiply matrices by hand and predict the shape of the result.
+        bloom: apply
+      - id: lo-2
+        text: Explain why matrix multiplication is associative but not commutative.
+        bloom: understand
+      - id: lo-3
+        text: Identify when a matrix is invertible and compute a small inverse.
+        bloom: analyze
+
+  - slug: linear-transformations
+    name: Linear Transformations
+    description: >-
+      Reading a matrix as a function that stretches, rotates, and shears space. This
+      reframing is what makes eigenvectors and PCA intuitive rather than mechanical.
+    difficulty: 3
+    estimated_minutes: 210
+    tags: [linear-algebra]
+    requires:
+      - slug: matrix-operations
+        strength: 1.0
+    related: [vectors-and-spaces]
+    objectives:
+      - id: lo-1
+        text: Describe the geometric effect of a given 2x2 matrix on the plane.
+        bloom: analyze
+      - id: lo-2
+        text: Relate the determinant to how a transformation scales area or volume.
+        bloom: understand
+      - id: lo-3
+        text: Compute the rank of a matrix and interpret what it says about the mapping.
+        bloom: apply
+
+  - slug: eigenvalues-and-eigenvectors
+    name: Eigenvalues and Eigenvectors
+    description: >-
+      The directions a linear transformation leaves unrotated, and the factors by
+      which it scales them. The mathematical core of PCA and spectral methods.
+    difficulty: 4
+    estimated_minutes: 270
+    tags: [linear-algebra, advanced]
+    requires:
+      - slug: linear-transformations
+        strength: 1.0
+    objectives:
+      - id: lo-1
+        text: Compute eigenvalues and eigenvectors of a small matrix.
+        bloom: apply
+      - id: lo-2
+        text: Explain geometrically what an eigenvector of a transformation is.
+        bloom: understand
+      - id: lo-3
+        text: Diagonalise a matrix and state when diagonalisation is possible.
+        bloom: analyze
+
+  - slug: singular-value-decomposition
+    name: Singular Value Decomposition
+    description: >-
+      Factorising any matrix into rotation, scaling, and rotation. The general tool
+      behind low-rank approximation, recommender systems, and dimensionality reduction.
+    difficulty: 4
+    estimated_minutes: 240
+    tags: [linear-algebra, advanced]
+    requires:
+      - slug: eigenvalues-and-eigenvectors
+        strength: 0.9
+    builds_on: [eigenvalues-and-eigenvectors]
+    objectives:
+      - id: lo-1
+        text: State the SVD factorisation and describe each factor's role.
+        bloom: understand
+      - id: lo-2
+        text: Use truncated SVD to construct a low-rank approximation of a matrix.
+        bloom: apply
+
+  # --- Probability ---------------------------------------------------------- #
+  - slug: probability-fundamentals
+    name: Probability Fundamentals
+    description: >-
+      Sample spaces, events, and the axioms of probability, plus the independence and
+      counting arguments that most probability errors trace back to.
+    difficulty: 2
+    estimated_minutes: 210
+    tags: [probability, core]
+    objectives:
+      - id: lo-1
+        text: Compute probabilities of compound events using the axioms.
+        bloom: apply
+      - id: lo-2
+        text: Determine whether two events are independent and justify the answer.
+        bloom: analyze
+
+  - slug: conditional-probability
+    name: Conditional Probability
+    description: >-
+      Updating a probability once something is known, and the difference between
+      P(A given B) and P(B given A) that so much faulty reasoning depends on.
+    difficulty: 2
+    estimated_minutes: 150
+    tags: [probability]
+    requires:
+      - slug: probability-fundamentals
+        strength: 1.0
+    objectives:
+      - id: lo-1
+        text: Compute conditional probabilities and apply the multiplication rule.
+        bloom: apply
+      - id: lo-2
+        text: Distinguish P(A|B) from P(B|A) in a worked scenario.
+        bloom: analyze
+
+  - slug: bayes-theorem
+    name: Bayes' Theorem
+    description: >-
+      Inverting a conditional probability to update belief in a hypothesis given
+      evidence — the inference pattern underneath Naive Bayes and Bayesian modelling.
+    difficulty: 3
+    estimated_minutes: 180
+    tags: [probability, core]
+    requires:
+      - slug: conditional-probability
+        strength: 1.0
+    objectives:
+      - id: lo-1
+        text: Apply Bayes' theorem to a diagnostic-testing problem.
+        bloom: apply
+      - id: lo-2
+        text: Explain the roles of prior, likelihood, and posterior.
+        bloom: understand
+      - id: lo-3
+        text: Explain why a rare condition yields many false positives despite an accurate test.
+        bloom: analyze
+
+  - slug: random-variables
+    name: Random Variables
+    description: >-
+      Mapping outcomes to numbers, and the distinction between discrete and continuous
+      random variables and their mass and density functions.
+    difficulty: 3
+    estimated_minutes: 180
+    tags: [probability]
+    requires:
+      - slug: probability-fundamentals
+        strength: 1.0
+    objectives:
+      - id: lo-1
+        text: Distinguish discrete from continuous random variables with examples.
+        bloom: understand
+      - id: lo-2
+        text: Work with probability mass and density functions.
+        bloom: apply
+
+  - slug: expectation-and-variance
+    name: Expectation and Variance
+    description: >-
+      The mean as a long-run average and the variance as spread, with the linearity
+      properties that make them tractable.
+    difficulty: 3
+    estimated_minutes: 180
+    tags: [probability, statistics, core]
+    requires:
+      - slug: random-variables
+        strength: 1.0
+    objectives:
+      - id: lo-1
+        text: Compute expectation and variance for discrete and continuous variables.
+        bloom: apply
+      - id: lo-2
+        text: Apply linearity of expectation, including to dependent variables.
+        bloom: apply
+      - id: lo-3
+        text: Explain why variance does not add for dependent variables.
+        bloom: analyze
+
+  - slug: common-distributions
+    name: Common Probability Distributions
+    description: >-
+      Bernoulli, binomial, Poisson, uniform, normal, and exponential — when each
+      arises and what its parameters control.
+    difficulty: 3
+    estimated_minutes: 240
+    tags: [probability, statistics]
+    requires:
+      - slug: expectation-and-variance
+        strength: 1.0
+    objectives:
+      - id: lo-1
+        text: Select an appropriate distribution for a described data-generating process.
+        bloom: evaluate
+      - id: lo-2
+        text: State the parameters and moments of the standard distributions.
+        bloom: remember
+      - id: lo-3
+        text: Explain the central limit theorem and why the normal distribution recurs.
+        bloom: understand
+
+  - slug: maximum-likelihood-estimation
+    name: Maximum Likelihood Estimation
+    description: >-
+      Choosing the parameters that make observed data most probable. Nearly every
+      standard loss function is a negative log-likelihood in disguise, which is why
+      this concept unifies so much of supervised learning.
+    difficulty: 4
+    estimated_minutes: 210
+    tags: [statistics, core]
+    requires:
+      - slug: common-distributions
+        strength: 1.0
+      - slug: derivatives
+        strength: 0.9
+        rationale: Maximising a likelihood means setting its derivative to zero.
+    objectives:
+      - id: lo-1
+        text: Derive the maximum likelihood estimator for a simple distribution.
+        bloom: analyze
+      - id: lo-2
+        text: Explain why the log-likelihood is maximised instead of the likelihood.
+        bloom: understand
+      - id: lo-3
+        text: Connect squared error loss to Gaussian maximum likelihood.
+        bloom: evaluate
+
+  - slug: statistical-inference
+    name: Statistical Inference
+    description: >-
+      Reasoning from a sample to a population: estimators, sampling distributions,
+      standard errors, and confidence intervals.
+    difficulty: 4
+    estimated_minutes: 240
+    tags: [statistics]
+    requires:
+      - slug: common-distributions
+        strength: 1.0
+    objectives:
+      - id: lo-1
+        text: Construct and interpret a confidence interval.
+        bloom: apply
+      - id: lo-2
+        text: Explain the difference between a sample statistic and a population parameter.
+        bloom: understand
+
+  - slug: hypothesis-testing
+    name: Hypothesis Testing
+    description: >-
+      Null and alternative hypotheses, p-values, and error types — including what a
+      p-value does not mean.
+    difficulty: 3
+    estimated_minutes: 210
+    tags: [statistics]
+    requires:
+      - slug: statistical-inference
+        strength: 1.0
+    objectives:
+      - id: lo-1
+        text: Carry out a hypothesis test and state the conclusion correctly.
+        bloom: apply
+      - id: lo-2
+        text: Explain what a p-value is and what it is commonly mistaken for.
+        bloom: analyze
+
+  # --- Optimisation --------------------------------------------------------- #
+  - slug: convex-functions
+    name: Convexity
+    description: >-
+      What makes a function convex, and why convexity guarantees that a local minimum
+      is global — the property that separates optimisation problems you can trust from
+      those you cannot.
+    difficulty: 4
+    estimated_minutes: 180
+    tags: [optimization]
+    requires:
+      - slug: derivatives
+        strength: 1.0
+    objectives:
+      - id: lo-1
+        text: Determine whether a given function is convex.
+        bloom: analyze
+      - id: lo-2
+        text: Explain why convexity makes local minima global.
+        bloom: understand
+
+  - slug: optimization-fundamentals
+    name: Optimisation Fundamentals
+    description: >-
+      Objective functions, minima and maxima, first- and second-order optimality
+      conditions, and the shape of the loss surfaces that iterative methods traverse.
+      This is the bridge between calculus and any algorithm that learns.
+    difficulty: 3
+    estimated_minutes: 240
+    tags: [optimization, core]
+    requires:
+      - slug: derivatives
+        strength: 1.0
+      - slug: gradients-and-jacobians
+        strength: 0.9
+    related: [convex-functions]
+    objectives:
+      - id: lo-1
+        text: Formulate a problem as the minimisation of an objective function.
+        bloom: apply
+      - id: lo-2
+        text: Use first- and second-order conditions to classify a critical point.
+        bloom: analyze
+      - id: lo-3
+        text: Describe how the curvature of a loss surface affects an iterative method.
+        bloom: understand
+
+  - slug: gradient-descent
+    name: Gradient Descent
+    description: >-
+      Iteratively stepping against the gradient to minimise a function, and the
+      behaviour of the learning rate — divergence when too large, stalling when too
+      small. The optimiser almost every model is trained with.
+    difficulty: 3
+    estimated_minutes: 240
+    tags: [optimization, core]
+    aliases: [sgd, stochastic-gradient-descent]
+    requires:
+      - slug: optimization-fundamentals
+        strength: 1.0
+        rationale: >-
+          Gradient descent is one method for a general problem; without the general
+          framing it is memorised as a formula rather than understood.
+      - slug: gradients-and-jacobians
+        strength: 1.0
+    objectives:
+      - id: lo-1
+        text: Execute gradient descent by hand for two iterations on a simple function.
+        bloom: apply
+      - id: lo-2
+        text: Explain how the learning rate causes divergence or slow convergence.
+        bloom: analyze
+      - id: lo-3
+        text: Compare batch, stochastic, and mini-batch variants and their trade-offs.
+        bloom: evaluate
+      - id: lo-4
+        text: Explain how momentum and adaptive learning rates modify the update.
+        bloom: understand
+
+  - slug: constrained-optimization
+    name: Constrained Optimisation
+    description: >-
+      Optimising subject to constraints using Lagrange multipliers and KKT conditions
+      — the framework behind support vector machines.
+    difficulty: 4
+    estimated_minutes: 240
+    tags: [optimization, advanced]
+    requires:
+      - slug: optimization-fundamentals
+        strength: 1.0
+      - slug: convex-functions
+        strength: 0.8
+    objectives:
+      - id: lo-1
+        text: Solve a constrained optimisation problem with Lagrange multipliers.
+        bloom: apply
+      - id: lo-2
+        text: Interpret a multiplier as the shadow price of relaxing a constraint.
+        bloom: understand
