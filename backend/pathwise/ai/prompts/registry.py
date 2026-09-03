@@ -40,6 +40,7 @@ PROMPTS_DIR: Final = Path(__file__).resolve().parent
 #: it; promoting it here does. Keep this list alphabetical.
 ACTIVE_VERSIONS: Final[dict[str, str]] = {
     "decision_explain": "v1",
+    "diagnostic_generate": "v1",
     "goal_parse": "v1",
     "roadmap_annotate": "v1",
 }

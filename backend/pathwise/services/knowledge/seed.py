@@ -237,6 +237,7 @@ def build_graph_from_corpus(corpus: SeedCorpus) -> KnowledgeGraph:
             estimated_minutes=concept.estimated_minutes,
             domain=domain.domain,
             description=concept.description,
+            objective_ids=tuple(objective.id for objective in concept.objectives),
         )
         for domain in corpus.domains
         for concept in domain.concepts

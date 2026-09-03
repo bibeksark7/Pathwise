@@ -273,4 +273,5 @@ def _to_target(
         difficulty=node.difficulty,
         band=band,
         covers=covers,
+        objective_ids=node.objective_ids,
     )

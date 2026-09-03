@@ -58,6 +58,10 @@ class GraphNode:
     #: Carried so prompts can be built from graph facts alone. Empty is valid —
     #: a subgraph or a test fixture need not supply one.
     description: str = ""
+    #: Learning-objective ids declared by this concept. Assessment questions bind to
+    #: these, which is what turns a score into evidence about a specific capability
+    #: rather than a vague number about a whole topic.
+    objective_ids: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True, slots=True)
