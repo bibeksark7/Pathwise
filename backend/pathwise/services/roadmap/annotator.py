@@ -26,6 +26,7 @@ from pathwise.services.knowledge.catalogue import render_plan_steps, render_skip
 from pathwise.services.knowledge.graph import KnowledgeGraph
 from pathwise.services.roadmap.planner import RoadmapPlan
 from pathwise.services.roadmap.schemas import RoadmapAnnotation
+from pathwise.utils.text import count_noun
 
 log = get_logger(__name__)
 
@@ -74,7 +75,7 @@ def annotation_validator(
         if invented:
             result.add(
                 "rationales",
-                f"cover {len(invented)} step(s) that are not in this roadmap: {invented[:5]}",
+                f"cover {count_noun(len(invented), 'step')} not in this roadmap: {invented[:5]}",
                 "Write one rationale per listed step, using the exact slugs given. "
                 "Do not add steps.",
             )
@@ -83,7 +84,7 @@ def annotation_validator(
         if missing:
             result.add(
                 "rationales",
-                f"omit {len(missing)} step(s): {missing[:5]}",
+                f"omit {count_noun(len(missing), 'step')}: {missing[:5]}",
                 f"Every step needs a rationale. Missing: {', '.join(missing[:15])}.",
             )
 

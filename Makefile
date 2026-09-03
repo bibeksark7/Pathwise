@@ -2,7 +2,7 @@
 COMPOSE := docker compose
 BACKEND := $(COMPOSE) exec -T api
 
-.PHONY: help up down logs build migrate revision seed shell test test-live test-unit lint fmt typecheck eval clean
+.PHONY: help up down logs build migrate revision seed shell test test-live test-unit lint fmt typecheck eval web web-test web-check web-build fixtures clean
 
 help: ## Show this help
 	@grep -hE '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN{FS=":.*?## "}{printf "  \033[36m%-14s\033[0m %s\n", $$1, $$2}'
@@ -43,6 +43,18 @@ typecheck: ## mypy only
 
 eval: ## Run AI evaluation suites (fails on regression)
 	$(BACKEND) python -m pathwise.evaluation.run --suite all
+
+web: ## Run the frontend dev server (no Docker or API key needed)
+	cd frontend && npm install && npm run dev
+web-test: ## Frontend unit tests
+	cd frontend && npm run test
+web-check: ## Frontend typecheck
+	cd frontend && npm run typecheck
+web-build: ## Production build of the frontend
+	cd frontend && npm run build
+
+fixtures: ## Regenerate frontend fixtures from the deterministic engines
+	cd backend && python -m pathwise.cli_fixtures --out ../frontend/src/lib/fixtures.ts
 
 clean: ## Remove containers and volumes
 	$(COMPOSE) down -v

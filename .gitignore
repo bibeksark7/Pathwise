@@ -36,3 +36,6 @@ test-results/
 .vscode/
 .DS_Store
 Thumbs.db
+
+# Editor/tooling scratch (dev-server launch config for the local preview)
+.claude/

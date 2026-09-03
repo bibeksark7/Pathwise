@@ -36,6 +36,7 @@ from pathwise.api.errors import ValidationError
 from pathwise.models.enums import NodeStatus, NodeType
 from pathwise.services.knowledge.graph import KnowledgeGraph
 from pathwise.services.knowledge.mastery import MasteryEstimate
+from pathwise.utils.text import count_noun, plural
 
 #: A roadmap larger than this is not a plan, it is a syllabus. Beyond roughly this
 #: many steps a learner cannot see the path, so the goal needs narrowing instead.
@@ -498,8 +499,9 @@ def _collect_warnings(
         if optional:
             optional_hours = sum(n.estimated_minutes for n in optional) / 60
             warnings.append(
-                f"{len(optional)} step(s) totalling about {optional_hours:.0f} hours are "
-                "helpful rather than strictly required, and could be dropped to fit."
+                f"{count_noun(len(optional), 'step')} totalling about "
+                f"{optional_hours:.0f} hours {plural(len(optional), 'is')} helpful rather "
+                "than strictly required, and could be dropped to fit."
             )
     elif pacing.is_comfortable is False:
         warnings.append(

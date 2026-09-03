@@ -42,6 +42,7 @@ from pathwise.services.knowledge.mastery import (
     MasteryEstimate,
 )
 from pathwise.services.roadmap.planner import PlannedNode, RoadmapPlan
+from pathwise.utils.text import count_noun
 
 #: Factor weights. These are the product's opinion about what matters, stated in one
 #: place rather than smeared across conditionals. They sum to 1.0 so a total score is
@@ -397,7 +398,7 @@ def _goal_relevance(
         "goal_relevance",
         value,
         weights["goal_relevance"],
-        f"{distance} step(s) from the goal",
+        f"{count_noun(distance, 'step')} from the goal",
     )
 
 

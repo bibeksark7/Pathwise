@@ -1,0 +1,93 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  body {
+    @apply bg-ground text-ink font-sans antialiased;
+    font-feature-settings: "cv05" 1, "ss01" 1;
+  }
+
+  /* Numerals should line up in columns wherever they are compared. */
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* A visible, high-contrast focus ring everywhere. Keyboard users are not an
+     afterthought, and the amber is already the "pay attention here" colour. */
+  :focus-visible {
+    @apply outline-none ring-2 ring-signal ring-offset-2 ring-offset-ground;
+  }
+
+  ::selection {
+    @apply bg-signal/25 text-ink;
+  }
+
+  /* The platform scrollbar is a bright slab against this palette and reads as a
+     UI element in its own right. Quieten it to the same hairline vocabulary as
+     everything else. */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: theme("colors.line-bright") transparent;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply rounded-full border-4 border-solid border-transparent bg-line-bright bg-clip-content;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-faint bg-clip-content;
+  }
+}
+
+@layer components {
+  .eyebrow {
+    @apply font-mono text-eyebrow uppercase text-faint;
+  }
+
+}
+
+/* React Flow paints its own defaults; these bring it onto the drafting table. */
+.react-flow__edge-path {
+  stroke: #2e3742;
+  stroke-width: 1.25;
+}
+.react-flow__edge.animated .react-flow__edge-path {
+  stroke: #ffb020;
+  stroke-width: 1.5;
+}
+.react-flow__handle {
+  opacity: 0;
+  pointer-events: none;
+}
+.react-flow__attribution {
+  display: none;
+}
+.react-flow__controls-button {
+  @apply border-line bg-surface fill-muted;
+}
+.react-flow__controls-button:hover {
+  @apply bg-raised fill-ink;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

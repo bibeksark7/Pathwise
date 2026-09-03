@@ -36,6 +36,7 @@ from pathwise.services.knowledge.mastery import (
     MasteryEstimate,
 )
 from pathwise.services.roadmap.planner import RoadmapPlan
+from pathwise.utils.text import count_noun, plural
 
 #: A score at or below this counts as a failure worth adapting to. Above it the
 #: learner is struggling but coping, and churning their roadmap on every imperfect
@@ -458,7 +459,8 @@ def explain(result: AdaptationResult) -> str:
     if first.type is MutationType.SKIP:
         removed = len(result.mutations)
         return (
-            f"You have demonstrated enough that {removed} step(s) have been removed from your path."
+            f"You have demonstrated enough that {count_noun(removed, 'step')} "
+            f"{plural(removed, 'has')} been removed from your path."
         )
 
     if first.type is MutationType.ADD_REVIEW:
