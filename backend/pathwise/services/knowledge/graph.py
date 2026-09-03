@@ -37,10 +37,17 @@ PREREQ_SATISFACTION_THRESHOLD: Final = 0.60
 # grandparent is not exonerated.
 BLAME_HOP_DECAY: Final = 0.60
 
-# An unmeasured prerequisite is a prime suspect: we have no evidence the learner
-# knows it. This nudges low-confidence estimates up the blame ranking without
-# letting uncertainty alone manufacture an accusation.
-BLAME_UNCERTAINTY_WEIGHT: Final = 0.25
+# How much an accusation is discounted when it rests on no evidence.
+#
+# An unmeasured prerequisite still deserves suspicion — it may well be the gap — but
+# "we never tested you on this" is a weaker basis for spending someone's hours than
+# "we measured you at 0.2". Without this discount the two are inverted: an unmeasured
+# concept scores a full 1.0 deficit and beats every concept actually observed to be
+# weak, so the system reliably sends learners to the topic it knows least about.
+#
+# The floor keeps unmeasured concepts in contention when nothing better exists, which
+# is the common case for a learner who has only just started.
+BLAME_EVIDENCE_FLOOR: Final = 0.40
 
 MAX_TRAVERSAL_DEPTH: Final = 12
 
@@ -463,9 +470,10 @@ class KnowledgeGraph:
            weak accusation even when mastery is zero.
         3. **hop decay** — a direct prerequisite outranks a distant ancestor.
 
-        Uncertainty adds a modest bonus: a prerequisite we have never measured is a
-        genuine suspect, but uncertainty alone must not fabricate a culprit, so it
-        scales an existing deficit rather than creating one.
+        Confidence scales the result rather than boosting it: a prerequisite we
+        have measured at 0.2 is a better-supported accusation than one we simply
+        never tested, and inverting that sends learners to whatever the system
+        happens to know least about.
 
         Returns an empty tuple when every prerequisite is comfortably met — in which
         case the difficulty is with *this* concept, not beneath it, and the caller
@@ -485,12 +493,13 @@ class KnowledgeGraph:
                 continue
 
             certainty = confidence.get(requirement.concept_id, 0.0)
-            uncertainty_bonus = 1.0 + BLAME_UNCERTAINTY_WEIGHT * (1.0 - certainty)
+            # Scale by how well-evidenced the accusation is, never by more than 1.
+            evidence_weight = BLAME_EVIDENCE_FLOOR + (1.0 - BLAME_EVIDENCE_FLOOR) * certainty
             score = (
                 deficit
                 * requirement.strength
                 * (BLAME_HOP_DECAY ** (requirement.hops - 1))
-                * uncertainty_bonus
+                * evidence_weight
             )
 
             candidates.append(

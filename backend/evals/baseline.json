@@ -1,0 +1,35 @@
+{
+  "recorded_at": "2026-09-03T19:04:13Z",
+  "suites": {
+    "adaptation": {
+      "concepts_grounded": 1.0,
+      "mutation_match": 1.0,
+      "no_wrong_target": 1.0,
+      "pass_rate": 1.0,
+      "target_match": 1.0
+    },
+    "blame": {
+      "no_false_accusation": 1.0,
+      "pass_rate": 1.0,
+      "top_1": 1.0,
+      "top_3": 1.0
+    },
+    "decision": {
+      "no_bad_suggestions": 1.0,
+      "pass_rate": 1.0,
+      "produced_a_recommendation": 1.0,
+      "top_1": 1.0,
+      "top_3": 1.0
+    },
+    "planner": {
+      "concepts_grounded": 1.0,
+      "no_irrelevant_steps": 1.0,
+      "ordering": 1.0,
+      "pacing_sane": 1.0,
+      "pass_rate": 1.0,
+      "prerequisite_ordering": 1.0,
+      "required_coverage": 1.0,
+      "skip_accuracy": 1.0
+    }
+  }
+}

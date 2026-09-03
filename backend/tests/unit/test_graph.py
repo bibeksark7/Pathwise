@@ -364,10 +364,45 @@ def test_weak_edges_produce_weak_accusations(graph: KnowledgeGraph) -> None:
     assert by_id[cid("linear-algebra")].score > by_id[cid("probability")].score
 
 
-def test_uncertainty_raises_suspicion_but_never_creates_it(graph: KnowledgeGraph) -> None:
-    """An unmeasured prerequisite is a suspect; a *satisfied* one stays innocent."""
-    # The whole transitive closure must be covered — an unmeasured grandparent is a
-    # legitimate suspect, so leaving one out would not test what this claims to.
+def test_a_measured_weakness_outranks_an_unmeasured_one(graph: KnowledgeGraph) -> None:
+    """Evidence beats absence of evidence.
+
+    This originally asserted the opposite — that low confidence *raised* a blame
+    score, on the reasoning that an untested prerequisite is a prime suspect. The
+    evaluation suite showed what that does in practice: an unmeasured concept scores
+    a full 1.0 deficit and beats every concept actually observed to be weak, so the
+    system reliably sends learners to whatever it knows least about. Every one of the
+    six labelled blame cases failed on it.
+
+    A concept measured at 0.2 is a better-supported accusation than one never tested,
+    so confidence now scales the score rather than inflating it.
+    """
+    mastery = {
+        **dict.fromkeys((cid("linear-algebra"), cid("probability")), 0.95),
+        cid("optimization"): 0.2,
+    }
+
+    measured = graph.blame_candidates(
+        cid("machine-learning"), mastery, confidence={cid("optimization"): 1.0}
+    )
+    unmeasured = graph.blame_candidates(
+        cid("machine-learning"), mastery, confidence={cid("optimization"): 0.0}
+    )
+    assert measured[0].score > unmeasured[0].score
+
+
+def test_an_unmeasured_prerequisite_is_still_a_suspect(graph: KnowledgeGraph) -> None:
+    """The discount must not silence it entirely — for a brand-new learner nothing
+    has been measured, and blame still has to name somewhere to start."""
+    candidates = graph.blame_candidates(cid("machine-learning"), {}, confidence={})
+    assert candidates
+    assert candidates[0].score > 0
+
+
+def test_a_satisfied_prerequisite_is_never_blamed_however_uncertain(
+    graph: KnowledgeGraph,
+) -> None:
+    """Uncertainty scales an existing deficit; it must not manufacture one."""
     solid = dict.fromkeys(
         (
             cid("linear-algebra"),
@@ -380,17 +415,7 @@ def test_uncertainty_raises_suspicion_but_never_creates_it(graph: KnowledgeGraph
         0.95,
     )
     no_confidence = dict.fromkeys(solid, 0.0)
-    # Every prerequisite is satisfied, so zero confidence must still yield no blame.
     assert graph.blame_candidates(cid("machine-learning"), solid, confidence=no_confidence) == ()
-
-    weak = {**solid, cid("optimization"): 0.2}
-    confident = graph.blame_candidates(
-        cid("machine-learning"), weak, confidence={cid("optimization"): 1.0}
-    )
-    unsure = graph.blame_candidates(
-        cid("machine-learning"), weak, confidence={cid("optimization"): 0.0}
-    )
-    assert unsure[0].score > confident[0].score
 
 
 def test_blame_reports_the_numbers_behind_the_ranking(graph: KnowledgeGraph) -> None:
