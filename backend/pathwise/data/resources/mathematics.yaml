@@ -1,0 +1,212 @@
+# Curated resources for the `mathematics` domain.
+#
+# Weighted towards material that builds intuition before mechanics — for the maths
+# behind machine learning, understanding what a gradient *is* matters more than being
+# fast at computing one.
+
+version: 1
+collection: mathematics
+description: Calculus, linear algebra, probability, statistics, and optimisation.
+
+resources:
+  # --- Calculus -------------------------------------------------------------- #
+  - title: "3Blue1Brown: Essence of Calculus"
+    url: https://www.3blue1brown.com/topics/calculus
+    resource_type: video
+    concepts:
+      [limits-and-continuity, derivatives, chain-rule, integrals, functions-and-graphs]
+    difficulty: 2
+    duration_minutes: 200
+    description: >-
+      Visual, intuition-first calculus. Builds the mental picture that makes the
+      symbolic rules feel inevitable rather than arbitrary — the single best starting
+      point if calculus previously felt like memorisation.
+    authors: [Grant Sanderson]
+    covers_objectives: [lo-1, lo-2]
+
+  - title: "MIT 18.01: Single Variable Calculus"
+    url: https://ocw.mit.edu/courses/18-01-single-variable-calculus-fall-2006/
+    resource_type: course
+    concepts: [limits-and-continuity, derivatives, integrals]
+    difficulty: 3
+    duration_minutes: 2000
+    description: >-
+      A complete first calculus course with lectures, notes and exams. Rigorous and
+      long; the counterpart to 3Blue1Brown rather than a replacement for it.
+    authors: [MIT OpenCourseWare]
+
+  - title: "Khan Academy: Multivariable Calculus"
+    url: https://www.khanacademy.org/math/multivariable-calculus
+    resource_type: course
+    concepts: [partial-derivatives, gradients-and-jacobians]
+    difficulty: 3
+    duration_minutes: 900
+    description: >-
+      Partial derivatives, gradients and the Jacobian, worked at a deliberate pace
+      with a lot of practice problems.
+
+  - title: "MIT 18.02: Multivariable Calculus"
+    url: https://ocw.mit.edu/courses/18-02-multivariable-calculus-fall-2007/
+    resource_type: course
+    concepts: [partial-derivatives, gradients-and-jacobians]
+    difficulty: 4
+    duration_minutes: 2000
+    authors: [MIT OpenCourseWare]
+
+  # --- Linear algebra -------------------------------------------------------- #
+  - title: "3Blue1Brown: Essence of Linear Algebra"
+    url: https://www.3blue1brown.com/topics/linear-algebra
+    resource_type: video
+    concepts:
+      [
+        vectors-and-spaces,
+        matrix-operations,
+        linear-transformations,
+        eigenvalues-and-eigenvectors,
+      ]
+    difficulty: 2
+    duration_minutes: 180
+    description: >-
+      Reframes matrices as transformations of space rather than grids of numbers.
+      This is the reframing that makes eigenvectors and PCA intuitive instead of
+      mechanical.
+    authors: [Grant Sanderson]
+
+  - title: "MIT 18.06: Linear Algebra"
+    url: https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/
+    resource_type: course
+    concepts:
+      [
+        vectors-and-spaces,
+        matrix-operations,
+        linear-transformations,
+        eigenvalues-and-eigenvectors,
+        singular-value-decomposition,
+      ]
+    difficulty: 4
+    duration_minutes: 2400
+    description: >-
+      Gilbert Strang's course, widely regarded as the best linear algebra teaching
+      available anywhere. Complete lectures, problem sets and exams.
+    authors: [Gilbert Strang, MIT OpenCourseWare]
+
+  - title: "Immersive Linear Algebra"
+    url: https://immersivemath.com/ila/index.html
+    resource_type: interactive
+    concepts: [vectors-and-spaces, matrix-operations, linear-transformations]
+    difficulty: 2
+    duration_minutes: 400
+    description: >-
+      A linear algebra book where every figure is interactive. Useful if static
+      diagrams have not been landing.
+
+  - title: NumPy Linear Algebra Reference
+    url: https://numpy.org/doc/stable/reference/routines.linalg.html
+    resource_type: documentation
+    concepts: [matrix-operations, eigenvalues-and-eigenvectors, singular-value-decomposition]
+    difficulty: 3
+    duration_minutes: 60
+    description: >-
+      The computational side: which function to reach for, and what it returns.
+
+  # --- Probability and statistics -------------------------------------------- #
+  - title: "Seeing Theory"
+    url: https://seeing-theory.brown.edu/
+    resource_type: interactive
+    concepts:
+      [probability-fundamentals, random-variables, common-distributions, expectation-and-variance]
+    difficulty: 2
+    duration_minutes: 180
+    description: >-
+      A visual introduction to probability where every concept has a simulation you
+      can manipulate. Distributions stop being formulas and become shapes.
+    authors: [Brown University]
+
+  - title: "MIT 6.041: Probabilistic Systems Analysis"
+    url: https://ocw.mit.edu/courses/6-041-probabilistic-systems-analysis-and-applied-probability-fall-2010/
+    resource_type: course
+    concepts:
+      [
+        probability-fundamentals,
+        conditional-probability,
+        bayes-theorem,
+        random-variables,
+        expectation-and-variance,
+        common-distributions,
+      ]
+    difficulty: 4
+    duration_minutes: 2400
+    authors: [John Tsitsiklis, MIT OpenCourseWare]
+
+  - title: "3Blue1Brown: Bayes' Theorem"
+    url: https://www.3blue1brown.com/lessons/bayes-theorem
+    resource_type: video
+    concepts: [bayes-theorem, conditional-probability]
+    difficulty: 2
+    duration_minutes: 30
+    description: >-
+      Builds Bayes geometrically, which makes the base-rate result obvious rather
+      than surprising.
+    authors: [Grant Sanderson]
+
+  - title: "Think Stats"
+    url: https://greenteapress.com/wp/think-stats-3e/
+    resource_type: book
+    concepts: [statistical-inference, hypothesis-testing, common-distributions]
+    difficulty: 3
+    duration_minutes: 900
+    description: >-
+      Statistics taught through Python code on real datasets, rather than through
+      closed-form derivations. Free, and unusually practical.
+    authors: [Allen B. Downey]
+
+  - title: "StatQuest"
+    url: https://statquest.org/video-index/
+    resource_type: video
+    concepts:
+      [
+        expectation-and-variance,
+        common-distributions,
+        statistical-inference,
+        hypothesis-testing,
+        maximum-likelihood-estimation,
+      ]
+    difficulty: 2
+    duration_minutes: 300
+    description: >-
+      Short videos that break statistical ideas into their smallest honest steps.
+      Particularly good when a concept has already been read and has not stuck.
+    authors: [Josh Starmer]
+
+  # --- Optimisation ---------------------------------------------------------- #
+  - title: "3Blue1Brown: Gradient Descent"
+    url: https://www.3blue1brown.com/lessons/gradient-descent
+    resource_type: video
+    concepts: [gradient-descent, optimization-fundamentals]
+    difficulty: 3
+    duration_minutes: 25
+    description: >-
+      Gradient descent shown as motion on a surface. The clearest available account
+      of why the update subtracts the gradient rather than adds it.
+    authors: [Grant Sanderson]
+
+  - title: "Convex Optimization"
+    url: https://web.stanford.edu/~boyd/cvxbook/
+    resource_type: book
+    concepts: [convex-functions, constrained-optimization, optimization-fundamentals]
+    difficulty: 5
+    duration_minutes: 3000
+    description: >-
+      The standard reference, free from the authors. Demanding, and the definitive
+      treatment of convexity, duality and KKT conditions.
+    authors: [Stephen Boyd, Lieven Vandenberghe]
+
+  - title: SciPy Optimization Reference
+    url: https://docs.scipy.org/doc/scipy/reference/optimize.html
+    resource_type: documentation
+    concepts: [optimization-fundamentals, constrained-optimization]
+    difficulty: 3
+    duration_minutes: 90
+    description: >-
+      The practical side: which solver suits which problem shape, and what each one
+      expects from you.

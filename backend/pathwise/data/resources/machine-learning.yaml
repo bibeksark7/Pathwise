@@ -1,0 +1,312 @@
+# Curated resources for the `machine-learning` domain.
+#
+# Deliberately mixes official documentation (authoritative, dry) with courses
+# (structured, slow) and explainers (fast, shallow), because the recommender selects
+# by learning style — someone who learns from video should not be handed an API
+# reference and vice versa.
+
+version: 1
+collection: machine-learning
+description: The numerical stack, supervised and unsupervised learning, deep learning, and MLOps.
+
+resources:
+  # --- Numerical and data stack ---------------------------------------------- #
+  - title: "NumPy: the absolute basics for beginners"
+    url: https://numpy.org/doc/stable/user/absolute_beginners.html
+    resource_type: documentation
+    concepts: [numpy-fundamentals]
+    difficulty: 2
+    duration_minutes: 120
+    description: >-
+      The official starting point. Covers arrays, shapes and indexing before
+      broadcasting, which is the right order.
+
+  - title: NumPy Broadcasting
+    url: https://numpy.org/doc/stable/user/basics.broadcasting.html
+    resource_type: documentation
+    concepts: [numpy-fundamentals]
+    difficulty: 3
+    duration_minutes: 45
+    description: >-
+      The rules behind most shape errors in model code. Short, and worth reading
+      properly rather than skimming.
+    covers_objectives: [lo-2]
+
+  - title: pandas User Guide
+    url: https://pandas.pydata.org/docs/user_guide/index.html
+    resource_type: documentation
+    concepts: [pandas-dataframes, data-cleaning-and-preprocessing]
+    difficulty: 2
+    duration_minutes: 300
+
+  - title: "10 Minutes to pandas"
+    url: https://pandas.pydata.org/docs/user_guide/10min.html
+    resource_type: tutorial
+    concepts: [pandas-dataframes]
+    difficulty: 2
+    duration_minutes: 45
+    description: >-
+      A fast orientation. Enough to be productive, not enough to understand the
+      copy-versus-view behaviour that causes most pandas bugs.
+
+  - title: Matplotlib Tutorials
+    url: https://matplotlib.org/stable/tutorials/index.html
+    resource_type: documentation
+    concepts: [data-visualization]
+    difficulty: 2
+    duration_minutes: 180
+
+  - title: scikit-learn Preprocessing Guide
+    url: https://scikit-learn.org/stable/modules/preprocessing.html
+    resource_type: documentation
+    concepts: [data-cleaning-and-preprocessing, feature-engineering]
+    difficulty: 3
+    duration_minutes: 120
+    description: >-
+      Scaling, encoding and imputation, with the pipeline API that keeps these
+      transformations from leaking test data into training.
+
+  # --- Supervised learning ---------------------------------------------------- #
+  - title: scikit-learn User Guide
+    url: https://scikit-learn.org/stable/user_guide.html
+    resource_type: documentation
+    concepts:
+      [
+        supervised-learning-fundamentals,
+        linear-regression,
+        logistic-regression,
+        regularization,
+        decision-trees,
+        ensemble-methods,
+        support-vector-machines,
+        clustering-kmeans,
+        dimensionality-reduction-pca,
+      ]
+    difficulty: 3
+    duration_minutes: 1200
+    description: >-
+      The reference for classical machine learning. Unusually good at explaining the
+      method alongside the API, so it reads as a textbook with runnable code.
+
+  - title: "An Introduction to Statistical Learning"
+    url: https://www.statlearning.com/
+    resource_type: book
+    concepts:
+      [
+        supervised-learning-fundamentals,
+        linear-regression,
+        logistic-regression,
+        regularization,
+        bias-variance-tradeoff,
+        cross-validation,
+        decision-trees,
+        ensemble-methods,
+        support-vector-machines,
+      ]
+    difficulty: 3
+    duration_minutes: 2400
+    description: >-
+      The standard first textbook, free from the authors. Rigorous without demanding
+      measure theory, and the bias-variance chapter is the clearest anywhere.
+    authors: [Gareth James, Daniela Witten, Trevor Hastie, Robert Tibshirani]
+
+  - title: scikit-learn Model Evaluation
+    url: https://scikit-learn.org/stable/modules/model_evaluation.html
+    resource_type: documentation
+    concepts: [model-evaluation-metrics]
+    difficulty: 3
+    duration_minutes: 150
+    description: >-
+      Every metric with its formula and its failure mode — including why accuracy is
+      the wrong choice on imbalanced data.
+
+  - title: scikit-learn Cross-validation
+    url: https://scikit-learn.org/stable/modules/cross_validation.html
+    resource_type: documentation
+    concepts: [cross-validation]
+    difficulty: 3
+    duration_minutes: 90
+    description: >-
+      Includes the grouped and time-series splitters, which is where naive shuffling
+      quietly invalidates a result.
+
+  - title: "StatQuest: Bias and Variance"
+    url: https://statquest.org/bias-and-variance-clearly-explained/
+    resource_type: video
+    concepts: [bias-variance-tradeoff]
+    difficulty: 2
+    duration_minutes: 20
+    authors: [Josh Starmer]
+
+  # --- Deep learning ---------------------------------------------------------- #
+  - title: "3Blue1Brown: Neural Networks"
+    url: https://www.3blue1brown.com/topics/neural-networks
+    resource_type: video
+    concepts:
+      [neural-network-fundamentals, backpropagation, gradient-descent, activation-functions]
+    difficulty: 3
+    duration_minutes: 120
+    description: >-
+      Builds a network from scratch visually, then derives backpropagation as the
+      chain rule flowing backwards. The clearest bridge from calculus to training.
+    authors: [Grant Sanderson]
+
+  - title: "Dive into Deep Learning"
+    url: https://d2l.ai/
+    resource_type: book
+    concepts:
+      [
+        neural-network-fundamentals,
+        backpropagation,
+        activation-functions,
+        training-deep-networks,
+        convolutional-networks,
+        sequence-models,
+        attention-and-transformers,
+        pytorch-fundamentals,
+      ]
+    difficulty: 4
+    duration_minutes: 3600
+    description: >-
+      An interactive book where every chapter is runnable code alongside the maths.
+      Broad, current, and free.
+    authors: [Aston Zhang, Zachary Lipton, Mu Li, Alexander Smola]
+
+  - title: "Deep Learning (Goodfellow, Bengio, Courville)"
+    url: https://www.deeplearningbook.org/
+    resource_type: book
+    concepts: [neural-network-fundamentals, backpropagation, training-deep-networks, regularization]
+    difficulty: 5
+    duration_minutes: 4000
+    description: >-
+      The theoretical reference. Heavy going and not a first book, but the place to
+      settle a question about why a technique works.
+    authors: [Ian Goodfellow, Yoshua Bengio, Aaron Courville]
+
+  - title: PyTorch Learn the Basics
+    url: https://pytorch.org/tutorials/beginner/basics/intro.html
+    resource_type: tutorial
+    concepts: [pytorch-fundamentals, training-deep-networks]
+    difficulty: 3
+    duration_minutes: 240
+    description: >-
+      The official onboarding path: tensors, autograd, modules and the training
+      loop, in the order you need them.
+
+  - title: PyTorch Autograd Mechanics
+    url: https://pytorch.org/docs/stable/notes/autograd.html
+    resource_type: documentation
+    concepts: [backpropagation, pytorch-fundamentals]
+    difficulty: 4
+    duration_minutes: 90
+    description: >-
+      What the framework actually records, and when gradient tracking should be
+      switched off. Explains a large class of confusing training bugs.
+
+  - title: "CS231n: Convolutional Neural Networks for Visual Recognition"
+    url: https://cs231n.github.io/
+    resource_type: course
+    concepts: [convolutional-networks, training-deep-networks, backpropagation]
+    difficulty: 4
+    duration_minutes: 1800
+    description: >-
+      Stanford's vision course notes. The backpropagation and training-tricks
+      sections are widely cited well outside computer vision.
+    authors: [Stanford University]
+
+  - title: "The Illustrated Transformer"
+    url: https://jalammar.github.io/illustrated-transformer/
+    resource_type: article
+    concepts: [attention-and-transformers, sequence-models]
+    difficulty: 4
+    duration_minutes: 60
+    description: >-
+      Attention explained diagram by diagram, following one example all the way
+      through. The standard first reading on the architecture.
+    authors: [Jay Alammar]
+
+  - title: "Attention Is All You Need"
+    url: https://arxiv.org/abs/1706.03762
+    resource_type: paper
+    concepts: [attention-and-transformers]
+    difficulty: 5
+    duration_minutes: 180
+    description: >-
+      The original transformer paper. Read it after an explainer, not before.
+    authors: [Vaswani et al.]
+    published_at: 2017-06-12
+
+  - title: "Practical Deep Learning for Coders"
+    url: https://course.fast.ai/
+    resource_type: course
+    concepts:
+      [neural-network-fundamentals, training-deep-networks, convolutional-networks, pytorch-fundamentals]
+    difficulty: 3
+    duration_minutes: 2400
+    description: >-
+      Top-down: train a working model in the first lesson, understand the internals
+      later. Suits people who lose motivation before the theory pays off.
+    authors: [Jeremy Howard, fast.ai]
+
+  # --- Unsupervised ----------------------------------------------------------- #
+  - title: scikit-learn Clustering
+    url: https://scikit-learn.org/stable/modules/clustering.html
+    resource_type: documentation
+    concepts: [clustering-kmeans, unsupervised-learning-fundamentals]
+    difficulty: 3
+    duration_minutes: 120
+
+  - title: scikit-learn Decomposition
+    url: https://scikit-learn.org/stable/modules/decomposition.html
+    resource_type: documentation
+    concepts: [dimensionality-reduction-pca]
+    difficulty: 4
+    duration_minutes: 120
+
+  - title: "StatQuest: Principal Component Analysis"
+    url: https://statquest.org/principal-component-analysis-pca-step-by-step/
+    resource_type: video
+    concepts: [dimensionality-reduction-pca, eigenvalues-and-eigenvectors]
+    difficulty: 3
+    duration_minutes: 25
+    authors: [Josh Starmer]
+
+  # --- Production ------------------------------------------------------------- #
+  - title: "Rules of Machine Learning"
+    url: https://developers.google.com/machine-learning/guides/rules-of-ml
+    resource_type: article
+    concepts: [ml-system-design, model-deployment, model-monitoring]
+    difficulty: 4
+    duration_minutes: 120
+    description: >-
+      Forty-three rules from production experience at Google, in rough order of when
+      they matter. Unusually candid about starting simple.
+    authors: [Martin Zinkevich]
+
+  - title: MLflow Documentation
+    url: https://mlflow.org/docs/latest/index.html
+    resource_type: documentation
+    concepts: [experiment-tracking]
+    difficulty: 2
+    duration_minutes: 120
+
+  - title: FastAPI Documentation
+    url: https://fastapi.tiangolo.com/
+    resource_type: documentation
+    concepts: [model-deployment]
+    difficulty: 3
+    duration_minutes: 240
+    description: >-
+      The framework most commonly used to put a Python model behind an HTTP
+      endpoint. The tutorial doubles as an introduction to typed request handling.
+
+  - title: "Machine Learning Engineering for Production (MLOps)"
+    url: https://www.deeplearning.ai/courses/machine-learning-engineering-for-production-mlops/
+    resource_type: course
+    concepts: [ml-system-design, model-deployment, model-monitoring, data-pipelines]
+    difficulty: 4
+    duration_minutes: 1800
+    description: >-
+      Covers the parts of a machine learning system that are not the model — drift,
+      pipelines, deployment, and the operational feedback loop.
+    authors: [Andrew Ng, DeepLearning.AI]

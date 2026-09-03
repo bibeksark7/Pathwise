@@ -1,0 +1,200 @@
+# Curated resources for the `programming` domain.
+#
+# Every entry is hand-picked and points at a stable, canonical location — an official
+# documentation root, a course landing page, a book's own site. Deep links into
+# individual pages rot fastest, so they are avoided where a stable parent exists.
+#
+# Nothing here is generated. The ingest pipeline HTTP-checks every URL before it can
+# be recommended, and `last_validated_at` records when that last happened.
+
+version: 1
+collection: programming
+description: Python, tooling, data structures, algorithms, and databases.
+
+resources:
+  # --- Python foundations --------------------------------------------------- #
+  - title: The Python Tutorial
+    url: https://docs.python.org/3/tutorial/
+    resource_type: documentation
+    concepts: [programming-basics, python-syntax-and-types, python-control-flow, python-functions]
+    difficulty: 1
+    duration_minutes: 480
+    description: >-
+      The official introduction to the language, written by the people who maintain
+      it. Dry in places, but authoritative and always current with the release.
+    authors: [Python Software Foundation]
+
+  - title: Python Data Structures Documentation
+    url: https://docs.python.org/3/tutorial/datastructures.html
+    resource_type: documentation
+    concepts: [python-data-structures]
+    difficulty: 2
+    duration_minutes: 90
+    description: >-
+      Lists, tuples, dictionaries and sets, with the comprehension syntax that makes
+      idiomatic Python readable.
+
+  - title: Python Classes Documentation
+    url: https://docs.python.org/3/tutorial/classes.html
+    resource_type: documentation
+    concepts: [python-oop]
+    difficulty: 3
+    duration_minutes: 120
+    description: >-
+      Classes, inheritance, and the scope rules behind them. Covers the parts of
+      Python's object model that surprise people coming from other languages.
+
+  - title: Errors and Exceptions
+    url: https://docs.python.org/3/tutorial/errors.html
+    resource_type: documentation
+    concepts: [python-error-handling]
+    difficulty: 2
+    duration_minutes: 60
+
+  - title: Modules and Packages
+    url: https://docs.python.org/3/tutorial/modules.html
+    resource_type: documentation
+    concepts: [python-modules-and-packaging]
+    difficulty: 2
+    duration_minutes: 75
+
+  - title: Python Virtual Environments Guide
+    url: https://docs.python.org/3/library/venv.html
+    resource_type: documentation
+    concepts: [virtual-environments-and-dependencies]
+    difficulty: 2
+    duration_minutes: 45
+    description: >-
+      The standard library's environment tool. Short, and enough to stop the
+      "works on my machine" class of problem.
+
+  - title: Reading and Writing Files
+    url: https://docs.python.org/3/tutorial/inputoutput.html
+    resource_type: documentation
+    concepts: [file-io-and-serialization]
+    difficulty: 2
+    duration_minutes: 60
+
+  - title: Real Python
+    url: https://realpython.com/
+    resource_type: tutorial
+    concepts: [python-functions, python-oop, python-data-structures, debugging-and-profiling]
+    difficulty: 2
+    duration_minutes: 120
+    description: >-
+      Long-form Python tutorials pitched at people who already program. Stronger on
+      practical idiom than the official docs, weaker on completeness.
+
+  # --- Tooling and engineering practice ------------------------------------- #
+  - title: "Pro Git"
+    url: https://git-scm.com/book/en/v2
+    resource_type: book
+    concepts: [version-control-git]
+    difficulty: 2
+    duration_minutes: 600
+    description: >-
+      The free official Git book. Chapters 1-3 cover everything most people need;
+      the internals chapters explain why the commands behave as they do.
+    authors: [Scott Chacon, Ben Straub]
+
+  - title: pytest Documentation
+    url: https://docs.pytest.org/en/stable/
+    resource_type: documentation
+    concepts: [testing-fundamentals]
+    difficulty: 3
+    duration_minutes: 180
+    description: >-
+      The testing framework most Python projects use. The fixtures and
+      parametrisation sections are where the leverage is.
+
+  - title: The Python Debugger
+    url: https://docs.python.org/3/library/pdb.html
+    resource_type: documentation
+    concepts: [debugging-and-profiling]
+    difficulty: 3
+    duration_minutes: 45
+
+  - title: Python Profilers
+    url: https://docs.python.org/3/library/profile.html
+    resource_type: documentation
+    concepts: [debugging-and-profiling]
+    difficulty: 3
+    duration_minutes: 60
+    description: >-
+      How to measure where time actually goes, rather than guessing and optimising
+      the wrong loop.
+
+  # --- Data structures and algorithms --------------------------------------- #
+  - title: "MIT 6.006: Introduction to Algorithms"
+    url: https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/
+    resource_type: course
+    concepts:
+      [
+        complexity-analysis,
+        arrays-and-strings,
+        linked-lists,
+        stacks-and-queues,
+        hash-tables,
+        trees-and-binary-search-trees,
+        sorting-algorithms,
+        graph-traversal,
+        dynamic-programming,
+      ]
+    difficulty: 4
+    duration_minutes: 2400
+    description: >-
+      A full university algorithms course with video lectures, notes and problem
+      sets. Substantial commitment, and the most rigorous free option available.
+    authors: [MIT OpenCourseWare]
+
+  - title: Python Time Complexity Reference
+    url: https://wiki.python.org/moin/TimeComplexity
+    resource_type: documentation
+    concepts: [complexity-analysis, python-data-structures]
+    difficulty: 3
+    duration_minutes: 20
+    description: >-
+      A single table of the cost of every operation on Python's built-in
+      collections. Worth reading once and returning to often.
+
+  - title: Sorting HOW TO
+    url: https://docs.python.org/3/howto/sorting.html
+    resource_type: documentation
+    concepts: [sorting-algorithms]
+    difficulty: 2
+    duration_minutes: 40
+
+  - title: The heapq Module
+    url: https://docs.python.org/3/library/heapq.html
+    resource_type: documentation
+    concepts: [heaps-and-priority-queues]
+    difficulty: 3
+    duration_minutes: 45
+
+  - title: Functional Programming HOWTO
+    url: https://docs.python.org/3/howto/functional.html
+    resource_type: documentation
+    concepts: [recursion, python-functions]
+    difficulty: 3
+    duration_minutes: 90
+
+  # --- Databases ------------------------------------------------------------- #
+  - title: PostgreSQL Tutorial
+    url: https://www.postgresql.org/docs/current/tutorial.html
+    resource_type: documentation
+    concepts: [sql-fundamentals]
+    difficulty: 2
+    duration_minutes: 180
+    description: >-
+      The official introduction. Teaches SQL against a real database rather than a
+      simplified dialect, which is what you will actually be using.
+
+  - title: PostgreSQL Data Definition
+    url: https://www.postgresql.org/docs/current/ddl.html
+    resource_type: documentation
+    concepts: [relational-data-modeling]
+    difficulty: 3
+    duration_minutes: 150
+    description: >-
+      Keys, constraints, and inheritance — the mechanics of expressing a data model
+      the database itself will enforce.
