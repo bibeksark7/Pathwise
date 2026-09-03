@@ -55,6 +55,9 @@ class GraphNode:
     difficulty: int = 3
     estimated_minutes: int = 120
     domain: str = ""
+    #: Carried so prompts can be built from graph facts alone. Empty is valid —
+    #: a subgraph or a test fixture need not supply one.
+    description: str = ""
 
 
 @dataclass(frozen=True, slots=True)

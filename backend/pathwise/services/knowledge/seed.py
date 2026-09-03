@@ -236,6 +236,7 @@ def build_graph_from_corpus(corpus: SeedCorpus) -> KnowledgeGraph:
             difficulty=concept.difficulty,
             estimated_minutes=concept.estimated_minutes,
             domain=domain.domain,
+            description=concept.description,
         )
         for domain in corpus.domains
         for concept in domain.concepts
