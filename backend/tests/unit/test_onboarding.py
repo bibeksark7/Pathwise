@@ -11,6 +11,7 @@ Everything runs against the deterministic fake provider.
 from __future__ import annotations
 
 import uuid
+from dataclasses import replace
 from datetime import UTC, datetime
 
 import pytest
@@ -449,13 +450,7 @@ async def test_an_empty_plan_does_not_call_the_model(
     mastery: dict[uuid.UUID, object] = {}
     plan = plan_roadmap(empty_graph, [cid("goal")], mastery, now=NOW)  # type: ignore[arg-type]
     # A goal is never skipped, so build a genuinely empty plan by other means.
-    empty_plan = type(plan)(
-        nodes=(),
-        edges=(),
-        skipped=plan.skipped,
-        pacing=plan.pacing,
-        scope=plan.scope,
-    )
+    empty_plan = replace(plan, nodes=(), edges=())
 
     client, provider = make_client(settings, recorder)
     result = await RoadmapAnnotator(client, empty_graph).annotate(

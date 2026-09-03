@@ -44,6 +44,22 @@ MAX_ROADMAP_NODES = 60
 #: Weeks of slack expected before a deadline is called comfortable.
 DEADLINE_BUFFER_WEEKS = 1.0
 
+#: Mastery at which a concept becomes a review rather than a full study step.
+#:
+#: Calibrated against what a single correct diagnostic answer can actually produce.
+#: From a uniform prior one full-weight success yields a posterior mean of 0.75, so a
+#: bar set at the 0.85 skip threshold would be unreachable and no diagnostic could
+#: ever shorten a roadmap. The distinction between compressing and skipping is
+#: therefore *confidence*, not level: one demonstration earns a shorter step,
+#: repeated demonstration earns removal.
+COMPRESSION_MASTERY_THRESHOLD = 0.70
+
+#: Fraction of the original time a compressed step keeps.
+COMPRESSION_RATIO = 0.3
+
+#: Floor for a review step. Below this it is not a review, it is a formality.
+MIN_REVIEW_MINUTES = 15
+
 
 @dataclass(frozen=True, slots=True)
 class PlannedNode:
@@ -77,6 +93,29 @@ class SkippedConcept:
     mastery: float
     confidence: float
     evidence_count: int
+
+
+@dataclass(frozen=True, slots=True)
+class CompressedConcept:
+    """A concept kept as a short review rather than a full study step.
+
+    Sits between "study this properly" and "you already know this". A diagnostic can
+    earn compression on a single well-aimed question; skipping needs sustained
+    evidence. Recording both figures makes the decision explainable — and reversible,
+    since a failed review restores the full step.
+    """
+
+    concept_id: UUID
+    slug: str
+    name: str
+    mastery: float
+    confidence: float
+    original_minutes: int
+    review_minutes: int
+
+    @property
+    def minutes_saved(self) -> int:
+        return self.original_minutes - self.review_minutes
 
 
 @dataclass(frozen=True, slots=True)
@@ -155,6 +194,8 @@ class RoadmapPlan:
     nodes: tuple[PlannedNode, ...]
     edges: tuple[tuple[UUID, UUID, float], ...]
     skipped: tuple[SkippedConcept, ...]
+    #: Steps kept but shortened to a review, on evidence too thin to skip outright.
+    compressed: tuple[CompressedConcept, ...]
     pacing: Pacing
     scope: ScopeTrace
     #: Steps reachable only through weak ("helpful, not required") prerequisite
@@ -222,16 +263,33 @@ def plan_roadmap(
     for goal in goals:
         required.update(graph.prerequisite_closure(goal))
 
-    # 2. Reduce — excuse the learner from what they have already demonstrated.
-    #    A goal concept is never skipped: it is the thing they asked to learn, and
-    #    prior competence in it should shorten the path to it, not delete the point.
+    # 2. Reduce — the spec's "reduce or skip", which are two different things.
+    #
+    #    SKIP removes a concept entirely, and demands both high mastery and enough
+    #    evidence to trust it. A goal concept is never skipped: it is the thing they
+    #    asked to learn, and prior competence should shorten the path to it, not
+    #    delete the point.
+    #
+    #    COMPRESS keeps the concept but shortens it to a review, and is what a
+    #    diagnostic can earn on its own. One well-aimed question is real evidence
+    #    that someone knows a topic, but it is not enough to delete it — that is how
+    #    a learner ends up stranded three steps later. Compression is the honest
+    #    middle: acknowledge the demonstration, spend a fraction of the time.
     included: list[UUID] = []
     skipped: list[SkippedConcept] = []
+    compressed: dict[UUID, CompressedConcept] = {}
 
     for concept_id in required:
         estimate = mastery.get(concept_id)
-        if concept_id not in goals and estimate is not None and estimate.is_skippable:
-            node = graph.node(concept_id)
+        is_goal = concept_id in goals
+
+        if estimate is None:
+            included.append(concept_id)
+            continue
+
+        node = graph.node(concept_id)
+
+        if not is_goal and estimate.is_skippable:
             skipped.append(
                 SkippedConcept(
                     concept_id=concept_id,
@@ -242,8 +300,23 @@ def plan_roadmap(
                     evidence_count=estimate.evidence_count,
                 )
             )
-        else:
-            included.append(concept_id)
+            continue
+
+        if not is_goal and estimate.effective_mastery(now) >= COMPRESSION_MASTERY_THRESHOLD:
+            compressed[concept_id] = CompressedConcept(
+                concept_id=concept_id,
+                slug=node.slug,
+                name=node.name,
+                mastery=estimate.effective_mastery(now),
+                confidence=estimate.confidence,
+                original_minutes=node.estimated_minutes,
+                review_minutes=max(
+                    MIN_REVIEW_MINUTES,
+                    int(node.estimated_minutes * COMPRESSION_RATIO),
+                ),
+            )
+
+        included.append(concept_id)
 
     if len(included) > max_nodes:
         raise ValidationError(
@@ -260,7 +333,7 @@ def plan_roadmap(
     effective = {cid: est.effective_mastery(now) for cid, est in mastery.items()}
     included_set = set(ordered)
     nodes = tuple(
-        _build_node(graph, concept_id, index, included_set, effective)
+        _build_node(graph, concept_id, index, included_set, effective, compressed)
         for index, concept_id in enumerate(ordered)
     )
 
@@ -287,6 +360,7 @@ def plan_roadmap(
         nodes=nodes,
         edges=edges,
         skipped=tuple(sorted(skipped, key=lambda s: s.slug)),
+        compressed=tuple(sorted(compressed.values(), key=lambda c: c.slug)),
         pacing=pacing,
         scope=scope,
         optional_steps=optional,
@@ -300,9 +374,11 @@ def _build_node(
     index: int,
     included: set[UUID],
     effective_mastery: Mapping[UUID, float],
+    compressed: Mapping[UUID, CompressedConcept] | None = None,
 ) -> PlannedNode:
-    """One roadmap step, with its status derived rather than assigned."""
+    """One roadmap step, with its status and type derived rather than assigned."""
     node = graph.node(concept_id)
+    compression = (compressed or {}).get(concept_id)
     depends_on = tuple(
         requirement.concept_id
         for requirement in graph.direct_requirements(concept_id)
@@ -317,9 +393,12 @@ def _build_node(
         slug=node.slug,
         name=node.name,
         order_index=index,
-        estimated_minutes=node.estimated_minutes,
+        # A compressed step keeps its place in the sequence but costs a fraction of
+        # the time, so pacing reflects the reduction automatically.
+        estimated_minutes=(compression.review_minutes if compression else node.estimated_minutes),
         difficulty=node.difficulty,
         domain=node.domain,
+        node_type=NodeType.REVIEW if compression else NodeType.TOPIC,
         status=status,
         depends_on=depends_on,
     )
