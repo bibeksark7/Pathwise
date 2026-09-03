@@ -180,13 +180,30 @@ class MasteryEstimate:
 
     @property
     def is_skippable(self) -> bool:
-        """High level *and* enough evidence to act on it.
+        """High level *and* enough evidence to act on it, ignoring decay.
 
         The conjunction is the point: skipping material on a confident-looking score
         from a single lucky quiz is how an adaptive system strands a learner.
+
+        Prefer :meth:`is_skippable_at` for anything that decides what a learner
+        studies — this property answers "did they once know it", not "do they know
+        it now".
         """
         return (
             self.mastery >= SKIP_MASTERY_THRESHOLD and self.confidence >= SKIP_CONFIDENCE_THRESHOLD
+        )
+
+    def is_skippable_at(self, now: datetime) -> bool:
+        """Whether this can be excused from a roadmap *today*.
+
+        The decay-aware form, and the one planning must use. Without it a concept
+        demonstrated two years ago stays excused forever: `mastery` never falls, so
+        the forgetting curve would exist in the model and have no effect on anything
+        the learner actually sees.
+        """
+        return (
+            self.effective_mastery(now) >= SKIP_MASTERY_THRESHOLD
+            and self.confidence >= SKIP_CONFIDENCE_THRESHOLD
         )
 
     def halflife_days(self) -> float:

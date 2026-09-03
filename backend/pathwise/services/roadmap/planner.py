@@ -289,7 +289,7 @@ def plan_roadmap(
 
         node = graph.node(concept_id)
 
-        if not is_goal and estimate.is_skippable:
+        if not is_goal and estimate.is_skippable_at(now):
             skipped.append(
                 SkippedConcept(
                     concept_id=concept_id,

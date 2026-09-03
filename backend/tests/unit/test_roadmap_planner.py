@@ -13,7 +13,7 @@ graph (for realistic scale) are exercised.
 from __future__ import annotations
 
 import uuid
-from datetime import UTC, date, datetime
+from datetime import UTC, date, datetime, timedelta
 from uuid import UUID
 
 import pytest
@@ -203,17 +203,41 @@ def test_the_goal_is_never_skipped(chain: KnowledgeGraph) -> None:
 
 
 def test_decayed_mastery_stops_excusing_material(chain: KnowledgeGraph) -> None:
-    """Something learned two years ago is not something you still know."""
+    """Something learned two years ago is not something you still know.
+
+    This previously asserted only that the *reported* mastery figure decayed, while
+    the skip decision itself read undecayed mastery — so a concept demonstrated once,
+    years ago, stayed excused from every future roadmap and the forgetting curve had
+    no effect on anything the learner saw. The test documented the bug instead of
+    catching it; it now checks the behaviour it is named for.
+    """
     long_ago = datetime(2024, 1, 1, tzinfo=UTC)
     stale = rebuild(
         [Observation(cid("basics"), EvidenceSource.ASSESSMENT, 1.0, long_ago) for _ in range(8)]
     )
-    fresh_plan = plan_roadmap(chain, [cid("goal")], {cid("basics"): stale}, now=long_ago)
-    later_plan = plan_roadmap(chain, [cid("goal")], {cid("basics"): stale}, now=NOW)
-    assert "basics" not in fresh_plan.slugs
-    # The skip decision itself uses undecayed mastery, but the reported figure decays,
-    # which is what surfaces staleness to the learner.
-    assert later_plan.skipped[0].mastery < fresh_plan.skipped[0].mastery
+    mastery = {cid("basics"): stale}
+
+    when_fresh = plan_roadmap(chain, [cid("goal")], mastery, now=long_ago)
+    much_later = plan_roadmap(chain, [cid("goal")], mastery, now=NOW)
+
+    # Freshly demonstrated: excused from the roadmap.
+    assert "basics" not in when_fresh.slugs
+    assert [s.slug for s in when_fresh.skipped] == ["basics"]
+
+    # Two years on: back in the roadmap, because it is no longer known.
+    assert "basics" in much_later.slugs
+    assert much_later.skipped == ()
+
+
+def test_recent_mastery_is_still_excused(chain: KnowledgeGraph) -> None:
+    """The other side of the same rule — decay must not be so aggressive that
+    something demonstrated last week is re-taught."""
+    last_week = NOW - timedelta(days=7)
+    recent = rebuild(
+        [Observation(cid("basics"), EvidenceSource.ASSESSMENT, 1.0, last_week) for _ in range(8)]
+    )
+    plan = plan_roadmap(chain, [cid("goal")], {cid("basics"): recent}, now=NOW)
+    assert "basics" not in plan.slugs
 
 
 def test_the_scope_trace_quantifies_the_reduction(chain: KnowledgeGraph) -> None:
